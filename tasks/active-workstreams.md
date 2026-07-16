@@ -2,7 +2,7 @@
 
 ## ACTIVE
 
-- `codex/playforge-preview-2026-07-15` — Codex session `019f6173-714b-7001-a2a0-df51adf51a3e` (started 2026-07-16T00:10:53Z) — Publish the verified five-game Preview 7 source, canonical artifacts, and current handoff to `spbaker22/playforge-worlds`.
+None.
 
 ## HOLD
 
@@ -14,7 +14,9 @@ None.
 
 ## RECENTLY MERGED
 
-None.
+| Date | Branch | Merge SHA | What |
+|---|---|---|---|
+| 2026-07-15 | `codex/playforge-preview-2026-07-15` | `ad074bf` | Published the verified five-game Preview 7 source, canonical artifacts, and current handoff. |
 
 ## RECENTLY ABANDONED
 
