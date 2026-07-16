@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#120F12">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="icon" href="data:,">
+  <title>ASHFALL | Ember Run</title>
+  <style>
+    :root{
+      --cream:#F7F0E3;
+      --dim:rgba(247,240,227,.64);
+      --go:#E85B2A;
+      --accent:#FF8A4C;
+      --bg:#120F12;
+      --frame:rgba(20,9,7,.58);
+      --h1:#FFF7E8;
+      --h2:#FFB070;
+      --h3:#E8552A;
+      --glow:rgba(255,117,56,.32);
+      --glowStrong:rgba(232,91,42,.46);
+      --accentGlow:rgba(255,117,56,.45);
+      --goA:#F27B3E;
+      --goB:#C94221;
+      --goDeep:rgba(232,91,42,.24);
+      --titleIn:rgba(20,13,14,.08);
+      --titleOut:rgba(15,9,10,.82);
+      --resOut:rgba(15,9,10,.9);
+      --vigCol:rgba(216,53,24,.5);
+    }
+    body{background:#120F12;color:var(--cream);touch-action:none}
+    canvas#gl{touch-action:none;cursor:grab}
+    canvas#gl:active{cursor:grabbing}
+    .screen[hidden]{display:none!important;opacity:0!important}
+    #gradeOv{background:radial-gradient(125% 105% at 56% 44%,transparent 48%,rgba(16,7,7,.68) 100%)}
+    #hud:before{content:"";position:absolute;top:calc(env(safe-area-inset-top,0px) + 10px);left:22px;right:22px;height:1px;background:linear-gradient(90deg,rgba(255,138,76,.72),rgba(255,240,222,.09) 46%,rgba(255,138,76,.48))}
+    .chip{padding:8px 11px;border:1px solid rgba(255,199,156,.16);border-radius:8px;background:rgba(20,13,14,.58);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+    #brand{border-color:transparent;background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none}
+    #brandMark{display:inline-block;width:14px;height:14px;border:2px solid var(--accent);border-top-color:transparent;border-radius:50%;transform:rotate(28deg);box-shadow:inset 0 0 0 2px rgba(255,138,76,.15)}
+    #heartChip{min-width:120px}
+    #heartMarks{display:flex;justify-content:flex-end;gap:6px;margin-top:7px}
+    #heartMarks i{display:block;width:15px;height:15px;border:2px solid #FF9A60;transform:rotate(45deg);background:rgba(255,105,48,.75);box-shadow:0 0 15px rgba(255,105,48,.3);transition:opacity .2s,transform .2s}
+    #heartMarks i.off{opacity:.2;transform:rotate(45deg) scale(.72);background:transparent}
+    #timerChip b{font-size:34px}
+    #bigStat{bottom:calc(env(safe-area-inset-bottom,0px) + 22px)}
+    #bigN{font-size:58px}
+    #stateTag{padding:7px 10px 7px 11px;border-left:2px solid var(--accent);right:25px;bottom:calc(env(safe-area-inset-bottom,0px) + 108px);max-width:390px;text-align:right;letter-spacing:.2em;background:rgba(20,13,14,.48);border-radius:0 6px 6px 0}
+    body.play #stateTag{opacity:1}
+    #dashHud{position:fixed;z-index:31;left:22px;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);width:112px;height:112px;border-radius:50%;display:grid;place-items:center;pointer-events:none;background:conic-gradient(var(--accent) calc(var(--dash-ready,1) * 1turn),rgba(247,240,227,.12) 0);box-shadow:0 12px 36px rgba(8,4,5,.4);opacity:0;transition:opacity .35s}
+    #dashHud:before{content:"";position:absolute;inset:4px;border-radius:50%;background:rgba(19,13,14,.82);border:1px solid rgba(255,210,174,.12)}
+    #dashHud span{position:relative;text-align:center;color:var(--dim);font-size:9px;font-weight:800;line-height:1.35;letter-spacing:.24em;margin-left:.24em}
+    #dashHud b{display:block;color:var(--cream);font-size:12px;letter-spacing:.16em;margin-top:5px}
+    body.play #dashHud{opacity:1}
+    #touchMarker{position:fixed;z-index:32;width:70px;height:70px;border:1.5px solid rgba(255,224,190,.7);border-radius:50%;pointer-events:none;opacity:0;transform:translate(-50%,-50%) scale(.8);transition:opacity .1s,transform .1s;box-shadow:inset 0 0 0 12px rgba(255,138,76,.08),0 0 24px rgba(255,102,44,.18)}
+    #touchMarker.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+    #damageFlash{position:fixed;inset:0;z-index:35;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 50%,transparent 28%,rgba(226,51,22,.7) 100%);transition:opacity .12s}
+    body.hit #damageFlash{opacity:1}
+    #toast{top:17vh;padding:9px 14px;border-radius:6px;background:rgba(20,11,11,.46);font-size:15px}
+    #mute{top:calc(env(safe-area-inset-top,0px) + 14px)!important;right:18px!important;left:auto!important;bottom:auto!important;width:48px;height:48px;border-radius:8px;font-size:9px;font-weight:800;letter-spacing:.08em;color:var(--cream)}
+    body.play #mute{top:auto!important;right:auto!important;left:150px!important;bottom:calc(env(safe-area-inset-bottom,0px) + 22px)!important}
+    button:focus-visible{outline:2px solid #FFB071;outline-offset:3px}
+
+    #title{align-items:flex-start;text-align:left;padding:calc(env(safe-area-inset-top,0px) + 9vh) 52vw max(38px,env(safe-area-inset-bottom,0px)) max(46px,7vw);background:linear-gradient(90deg,rgba(15,10,11,.92) 0%,rgba(18,11,12,.7) 38%,rgba(18,11,12,.08) 69%,transparent 100%)}
+    #title .pre,#title .sub,#title h1{margin-left:0}
+    #title .pre{color:#FF9A60;letter-spacing:.42em}
+    #title h1{font-size:clamp(64px,10vw,132px);line-height:.78;letter-spacing:-.055em;max-width:650px}
+    #title .sub{max-width:470px;margin-top:22px;line-height:1.65;letter-spacing:.23em}
+    #tapGo,.screenButton{margin-left:0!important;border-radius:8px!important;border:1px solid rgba(255,176,113,.44)!important;background:linear-gradient(135deg,rgba(232,91,42,.86),rgba(158,49,28,.84))!important;box-shadow:0 12px 40px rgba(93,24,15,.35),inset 0 1px rgba(255,234,211,.18)!important;color:var(--cream)!important;animation:none!important;min-height:52px}
+    #tapGo{margin-top:36px!important;padding:16px 24px!important;letter-spacing:.24em!important}
+    #previewLabel{margin-top:14px;color:rgba(255,222,195,.48);font-size:9px;font-weight:800;letter-spacing:.28em;display:none}
+    body.preview #previewLabel{display:block}
+
+    #instructions{align-items:flex-start;text-align:left;padding:calc(env(safe-area-inset-top,0px) + 6vh) max(48px,8vw);background:linear-gradient(90deg,rgba(15,10,11,.92),rgba(15,10,11,.65) 54%,rgba(15,10,11,.18))}
+    #instructions .instructionWrap{width:min(660px,58vw)}
+    #instructions .pre{color:#FF9A60;font-size:11px;font-weight:800;letter-spacing:.38em;margin-bottom:14px}
+    #instructions h2{font-size:clamp(38px,6.2vw,78px);line-height:.92;letter-spacing:-.035em;max-width:620px}
+    #instructions .lead{color:var(--dim);font-size:14px;line-height:1.6;max-width:54ch;margin-top:18px}
+    #controlLessons{display:grid;grid-template-columns:1.25fr .75fr;gap:12px;margin-top:26px}
+    .lesson{min-height:110px;padding:18px;border:1px solid rgba(255,183,128,.2);border-radius:10px;background:rgba(27,17,17,.65)}
+    .lesson strong{display:block;color:#FF9A60;font-size:10px;letter-spacing:.3em;margin-bottom:9px}
+    .lesson span{display:block;color:var(--cream);font-size:19px;font-weight:750;line-height:1.18}
+    .lesson small{display:block;color:var(--dim);font-size:12px;line-height:1.4;margin-top:7px}
+    #btnReady{margin-top:22px;padding:16px 24px;font-family:var(--sans);font-size:12px;font-weight:800;letter-spacing:.25em;pointer-events:auto}
+
+    #count{background:radial-gradient(circle,rgba(33,15,13,.24),transparent 58%)}
+    #countN{font-size:clamp(112px,20vw,220px)}
+    #finish{background:radial-gradient(90% 80% at 50% 48%,rgba(35,16,13,.22),rgba(13,8,9,.68));pointer-events:none}
+    #finishPre{font-size:11px;font-weight:800;letter-spacing:.46em;color:#FF9A60;margin-left:.46em}
+    #finishBig{font-size:clamp(66px,11vw,140px);font-weight:850;line-height:.88;letter-spacing:-.045em;margin-top:10px;background:linear-gradient(180deg,#FFF3DF,#FF8A4C);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 9px 35px rgba(214,66,29,.35))}
+    #finishSub{margin-top:16px;color:var(--dim);font-size:12px;font-weight:700;letter-spacing:.28em}
+
+    #results{align-items:flex-start;text-align:left;padding:calc(env(safe-area-inset-top,0px) + 8vh) 54vw max(38px,env(safe-area-inset-bottom,0px)) max(46px,7vw);background:linear-gradient(90deg,rgba(15,9,10,.95),rgba(15,9,10,.84) 42%,rgba(15,9,10,.18) 72%,transparent)}
+    #results>*{margin-left:0;width:min(470px,40vw)}
+    #results .rp{color:#FF9A60}
+    #resBig{font-size:clamp(68px,9vw,118px);letter-spacing:-.04em;margin-top:8px}
+    #resSub{font-size:12px;line-height:1.5;letter-spacing:.22em}
+    #resRows{width:min(450px,39vw);display:grid;grid-template-columns:1fr 1fr;gap:1px;margin-top:24px;border-radius:10px;overflow:hidden;background:rgba(255,179,119,.13);line-height:1.25}
+    #resRows .resultCell{padding:14px 16px;background:rgba(23,14,15,.88);color:var(--dim);font-size:9px;letter-spacing:.22em}
+    #resRows b{display:block;color:var(--cream);font-size:20px;letter-spacing:.04em;margin-top:7px}
+    #results .rbtns{margin-top:24px}
+    #btnAgain{padding:16px 25px;font-size:11px;min-height:52px}
+    #rotateHint{display:none;position:fixed;z-index:60;inset:0;align-items:center;justify-content:center;text-align:center;padding:36px;background:#120F12;color:var(--cream);font-weight:800;letter-spacing:.22em;line-height:1.5}
+
+    @media (max-width:900px){
+      #title{padding-left:42px;padding-right:47vw}
+      #title h1{font-size:clamp(58px,9.8vw,94px)}
+      #instructions{padding-left:42px}
+      #instructions .instructionWrap{width:60vw}
+      #results{padding-left:42px;padding-right:51vw}
+      #results>*{width:44vw}
+    }
+    @media (max-height:640px){
+      #title{padding-top:calc(env(safe-area-inset-top,0px) + 6vh)}
+      #title .pre{margin-bottom:10px}
+      #title .sub{margin-top:14px}
+      #tapGo{margin-top:22px!important}
+      #instructions{padding-top:calc(env(safe-area-inset-top,0px) + 4vh)}
+      #instructions .lead{margin-top:10px}
+      #controlLessons{margin-top:14px}
+      .lesson{min-height:92px;padding:13px}
+      #btnReady{margin-top:14px}
+      #results{padding-top:calc(env(safe-area-inset-top,0px) + 5vh)}
+      #resRows{margin-top:14px}
+      #results .rbtns{margin-top:15px}
+    }
+    @media (orientation:portrait) and (max-width:700px){#rotateHint{display:flex}}
+    @media (prefers-reduced-motion:reduce){
+      *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+    }
+  </style>
+</head>
+<body>
+  <canvas id="gl" aria-label="Ashfall volcanic survival arena"></canvas>
+  <div id="gradeOv"></div>
+  <div id="vig"></div>
+  <div id="damageFlash"></div>
+  <div class="bar" id="barT"></div>
+  <div class="bar" id="barB"></div>
+
+  <div id="hud" aria-live="polite">
+    <div class="chip" id="brand"><span id="brandMark"></span>PLAYFORGE</div>
+    <div class="chip mid" id="timerChip">ASH WINDOW<b id="timeLeft">60</b></div>
+    <div class="chip right" id="heartChip">HEARTS<div id="heartMarks" aria-label="3 hearts"><i></i><i></i><i></i></div></div>
+    <div id="bigStat"><div id="bigN">0</div><div id="bigU">EVASION SCORE</div></div>
+    <div id="stateTag">READ THE RINGS</div>
+  </div>
+
+  <div id="dashHud"><span>DASH STATUS<b id="dashLabel">READY</b></span></div>
+  <div id="touchMarker"></div>
+
+  <section class="screen" id="title" data-screen>
+    <div class="pre">PLAYFORGE PRESENTS</div>
+    <h1>ASHFALL</h1>
+    <div class="sub">SURVIVE UNTIL RESCUE. READ THE GROUND. HOLD THE WINDOW.</div>
+    <button id="tapGo" type="button">ENTER THE CALDERA</button>
+    <div id="previewLabel">FAMILY PREVIEW</div>
+  </section>
+
+  <section class="screen hide" id="instructions" data-screen hidden inert aria-hidden="true">
+    <div class="instructionWrap">
+      <div class="pre" id="briefLabel">SURVIVAL BRIEF</div>
+      <h2>THE GROUND WARNS YOU FIRST.</h2>
+      <p class="lead">Stay outside the bright rings until the rescue window clears. Your ridge team is tracking your signal.</p>
+      <div id="controlLessons">
+        <div class="lesson"><strong>DRAG</strong><span>Your survivor follows your finger.</span><small>Move anywhere on the arena floor.</small></div>
+        <div class="lesson"><strong>TAP</strong><span>Dash toward safe ground.</span><small>Tap the place you want to reach when the ready signal is lit.</small></div>
+      </div>
+      <button class="screenButton" id="btnReady" type="button">I AM READY</button>
+    </div>
+  </section>
+
+  <section class="screen hide" id="count" data-screen hidden inert aria-hidden="true"><div id="countN">3</div></section>
+
+  <section class="screen hide" id="finish" data-screen hidden inert aria-hidden="true">
+    <div id="finishPre">CALDERA STATUS</div>
+    <div id="finishBig">YOU MADE IT</div>
+    <div id="finishSub">THE RESCUE WINDOW IS CLEAR</div>
+  </section>
+
+  <section class="screen hide" id="results" data-screen hidden inert aria-hidden="true">
+    <div class="rp" id="resPre">EMBER RUN COMPLETE</div>
+    <div id="resBig">0</div>
+    <div id="resSub">EVASION SCORE</div>
+    <div id="resRows"></div>
+    <div class="rbtns"><button class="rbtn go" id="btnAgain" type="button">RUN AGAIN</button></div>
+  </section>
+
+  <div id="toast" aria-live="assertive"></div>
+  <button id="mute" type="button" aria-label="Toggle sound">SOUND</button>
+  <div id="rotateHint">ROTATE YOUR IPAD FOR THE WIDEST VIEW</div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

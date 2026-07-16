@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Stackyard Golf — Dusk Garden</title>
+<meta name="theme-color" content="#141227">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+  :root{
+    --cream:#FFF6E8; --dim:rgba(255,246,232,.62); --go:#FF5C29; --accent:#FFD98A;
+    --bg:#141227; --frame:rgba(16,10,30,.42);
+    --h1:#FFF4E6; --h2:#FFBA94; --h3:#C86AA0;
+    --glow:rgba(255,180,130,.35); --glowStrong:rgba(255,140,110,.42);
+    --accentGlow:rgba(255,217,138,.6);
+    --goA:#FF7E3D; --goB:#F03A18; --goDeep:rgba(255,92,41,.25);
+    --titleIn:rgba(28,16,44,.12); --titleOut:rgba(10,6,20,.66); --resOut:rgba(8,5,18,.78);
+    --vigCol:rgba(255,217,138,.20);
+  }
+  #title[hidden],body.play #title{display:none!important;visibility:hidden!important;opacity:0!important}
+</style>
+</head>
+<body>
+<canvas id="gl"></canvas>
+<div id="gradeOv"></div>
+<div id="vig"></div>
+<div class="bar" id="barT"></div><div class="bar" id="barB"></div>
+
+<div id="hud">
+  <div class="chip" id="brand">
+    <svg width="15" height="15" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7.5" fill="none" stroke="#FF5C29" stroke-width="2.6" stroke-dasharray="33 14" stroke-linecap="round" transform="rotate(40 10 10)"/><path d="M8 6.6l5 3.4-5 3.4z" fill="#FFF4E4"/></svg>
+    PLAYFORGE
+  </div>
+  <div class="chip mid" id="posChip">POSITION<b id="pos">1ST</b></div>
+  <div class="chip right" id="holeChip">HOLE<b><span id="hole">1</span>/<span id="holeN">6</span></b></div>
+  <div id="bigStat"><div id="bigN">0</div><div id="bigU">STROKES · <span id="topar">E</span></div></div>
+  <div id="stateTag">FIRST LIGHT · PAR 2</div>
+</div>
+<div id="puck"><div id="puckDot"></div></div>
+
+<div class="screen" id="title">
+  <div class="pre">PLAYFORGE PRESENTS</div>
+  <h1>STACKYARD<br>GOLF</h1>
+  <div class="sub">DUSK GARDEN · FRONT SIX · 3 RIVALS</div>
+  <button id="tapGo">TAP TO PLAY</button>
+</div>
+
+<div class="screen hide" id="card">
+  <div class="rp" id="cardPre">HOLE 1 · FIRST LIGHT</div>
+  <div id="resBigC" style="font-size:clamp(60px,12vw,120px);font-weight:800;line-height:1;margin:6px 0 2px;background:linear-gradient(180deg,var(--h1) 15%,var(--h2) 60%,var(--h3));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 8px 34px var(--glowStrong))">PAR</div>
+  <div id="cardRows" style="margin-top:22px;font-size:13px;letter-spacing:.18em;color:var(--dim);line-height:2.1;font-weight:500"></div>
+  <div class="rbtns"><button class="rbtn go" id="btnNext">NEXT HOLE</button></div>
+</div>
+
+<div class="screen hide" id="results">
+  <div class="rp">FINAL CARD</div>
+  <div id="resBig">E</div>
+  <div id="resSub">STACKYARD GOLF · FRONT SIX</div>
+  <div id="resRows"></div>
+  <div class="rbtns">
+    <button class="rbtn go" id="btnAgain">PLAY AGAIN</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+<button id="mute">♪</button>
+
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>

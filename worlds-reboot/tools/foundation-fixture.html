@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <link rel="stylesheet" href="/engine/base.css">
+  <style>
+    :root{--bg:#101018;--cream:#fff;--dim:#aaa;--sans:system-ui}
+    #surface{position:fixed;inset:0;background:#182036}
+    #ignoredPointer{position:absolute;left:20px;top:20px;width:120px;height:60px}
+    #outsidePointer{position:fixed;right:20px;bottom:20px;width:120px;height:60px;z-index:2}
+    #inactive{background:rgba(120,0,80,.85)}
+    #hiddenButton{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:220px;height:90px}
+  </style>
+</head>
+<body>
+  <main id="surface" aria-label="gesture surface">
+    <button class="ignored" id="ignoredPointer">IGNORED</button>
+  </main>
+  <button id="outsidePointer">OUTSIDE</button>
+  <section class="screen" id="inactive" data-screen>
+    <button class="rbtn" id="hiddenButton">HIDDEN ACTION</button>
+  </section>
+</body>
+</html>

@@ -1,0 +1,36 @@
+# Local agent/workspace instructions
+/AGENTS.md
+
+# Dependencies and tool caches
+**/node_modules/
+**/.vite/
+**/.vite-temp/
+
+# Generated preview builds: retain only the immutable approved test candidate
+/worlds-reboot/preview-dist/*
+!/worlds-reboot/preview-dist/family-preview-20260715-7/
+!/worlds-reboot/preview-dist/family-preview-20260715-7/**
+
+# Generated evidence and review captures remain local
+/worlds-reboot/preview-evidence/
+/worlds-reboot/runner/private-phase4-correction/
+/worlds-reboot/tide/smoke-shots/
+/worlds-reboot/wings/evidence/
+
+# Runtime-only release claims
+/worlds-reboot/runner/.phase4-release-claims/
+/worlds-reboot/.phase4-*
+/worlds-reboot/runner/.phase4-*
+
+# Logs, coverage, and temporary work
+**/*.log
+**/logs/
+**/coverage/
+**/.tmp/
+**/.temp/
+**/tmp/
+**/temp/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
