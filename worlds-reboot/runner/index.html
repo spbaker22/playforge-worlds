@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Gridlock Run — Midnight Circuit</title>
+<meta name="theme-color" content="#0A0E1E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+  :root{
+    --cream:#F2F6FF; --dim:rgba(242,246,255,.6); --go:#FF5C29; --accent:#2EE6FF;
+    --bg:#0A0E1E; --frame:rgba(8,6,22,.44);
+    --h1:#F2F6FF; --h2:#7EDCFF; --h3:#FF3EC8;
+    --glow:rgba(46,230,255,.35); --glowStrong:rgba(255,62,200,.42);
+    --accentGlow:rgba(46,230,255,.6);
+    --goA:#FF7E3D; --goB:#F03A18; --goDeep:rgba(255,92,41,.25);
+    --titleIn:rgba(20,14,44,.14); --titleOut:rgba(6,4,18,.7); --resOut:rgba(5,3,16,.8);
+    --vigCol:rgba(255,62,200,.18);
+  }
+  #hud:before{content:"";position:absolute;left:20px;right:20px;top:calc(env(safe-area-inset-top,0px) + 10px);height:1px;background:linear-gradient(90deg,rgba(46,230,255,.65),rgba(242,246,255,.08) 36%,rgba(255,62,200,.62));box-shadow:0 0 18px rgba(46,230,255,.16)}
+  .chip{padding:8px 11px;border:1px solid rgba(180,214,238,.12);border-radius:7px;background:linear-gradient(135deg,rgba(8,13,29,.7),rgba(8,13,29,.28));backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+  #brand{border-color:transparent;background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none}
+  #shieldRow{letter-spacing:.3em;color:var(--accent);text-shadow:0 0 14px rgba(46,230,255,.6)}
+  #actionCue{
+    position:fixed;left:50%;bottom:max(54px,calc(env(safe-area-inset-bottom) + 32px));
+    z-index:12;transform:translateX(-50%);min-width:210px;padding:10px 18px;
+    border:1px solid rgba(46,230,255,.42);border-radius:6px;background:linear-gradient(90deg,rgba(7,9,25,.82),rgba(17,16,39,.72));
+    color:#F2F6FF;text-align:center;font:800 12px/1.1 -apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;
+    letter-spacing:.16em;box-shadow:0 0 28px rgba(46,230,255,.18);pointer-events:none;
+    opacity:0;transition:opacity .18s ease;
+  }
+  body.play #stateTag{opacity:1}
+  body.play #actionCue.show{opacity:1}
+  #controlHint{position:fixed;left:22px;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);z-index:31;width:150px;padding:13px 14px 12px;border:1px solid rgba(163,200,226,.18);border-radius:10px;background:rgba(7,11,25,.65);color:rgba(242,246,255,.58);font:700 9px/1.1 -apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;letter-spacing:.27em;text-align:center;opacity:0;transition:opacity .35s;pointer-events:none;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+  #controlHint b{display:block;margin-top:8px;color:#F2F6FF;font-size:21px;letter-spacing:.22em;text-shadow:0 0 16px rgba(46,230,255,.42)}
+  body.play #controlHint{opacity:1}
+  #title{align-items:flex-start;text-align:left;padding-left:max(7vw,54px)}
+  #title.hide{transition-duration:.16s}
+  #title .pre,#title .sub,#title h1{margin-left:0}
+  #title h1{font-size:clamp(52px,8.4vw,108px);line-height:.84;letter-spacing:-.045em}
+  #title .sub{max-width:560px;line-height:1.7;letter-spacing:.33em}
+  #title .titleMeta{margin-top:13px;color:#2EE6FF;font:800 10px/1.2 -apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;letter-spacing:.42em}
+  #tapGo{margin-top:42px!important;margin-left:0!important;padding:15px 20px!important;border:1px solid rgba(46,230,255,.55)!important;border-radius:5px!important;background:rgba(7,12,27,.55)!important;box-shadow:0 0 24px rgba(46,230,255,.12),inset 3px 0 #2EE6FF!important}
+  #stateTag{padding-left:10px;border-left:2px solid var(--accent)}
+  #results{
+    align-items:flex-start;justify-content:center;text-align:left;
+    padding:calc(env(safe-area-inset-top,0px) + 44px) 52vw max(34px,env(safe-area-inset-bottom,0px)) max(44px,6vw);
+    background:linear-gradient(90deg,rgba(5,7,20,.94) 0%,rgba(10,10,30,.86) 34%,rgba(9,8,26,.25) 58%,rgba(5,3,16,.12) 100%);
+  }
+  #results:before{content:"";position:absolute;left:max(24px,3.5vw);top:9%;bottom:9%;width:min(430px,43vw);border-left:2px solid #2EE6FF;border-top:1px solid rgba(46,230,255,.22);border-bottom:1px solid rgba(255,62,200,.2);background:linear-gradient(135deg,rgba(13,20,43,.6),rgba(15,8,29,.2));box-shadow:0 0 54px rgba(5,8,20,.42);pointer-events:none}
+  #results>*{position:relative;width:min(390px,39vw);margin-left:0}
+  #results .rp{font-size:11px;letter-spacing:.42em;color:#2EE6FF}
+  #resBig{font-size:clamp(62px,8.5vw,108px);line-height:.88;margin:10px 0 9px}
+  #resSub{font-size:12px;line-height:1.45;letter-spacing:.25em}
+  #resRows{margin-top:20px;font-size:11px;letter-spacing:.13em;line-height:1.8;max-height:28vh;overflow:hidden}
+  #results .rbtns{margin-top:26px}
+  #results .rbtn{width:auto;padding:14px 23px 14px calc(23px + .3em);font-size:11px}
+  @media (max-width:760px){#title{padding-left:38px}#controlHint{width:126px;left:14px}.chip{padding:6px 8px}#brand{left:12px}.chip.right{right:12px}}
+  @media (max-width:1100px){
+    #results{padding-left:46px;padding-right:53vw}
+    #results:before{left:25px;width:43vw}
+    #results>*{width:39vw}
+    #resBig{font-size:72px}
+    #resRows{font-size:10px;line-height:1.7}
+  }
+</style>
+</head>
+<body>
+<canvas id="gl"></canvas>
+<div id="gradeOv"></div>
+<div id="vig"></div>
+<div class="bar" id="barT"></div><div class="bar" id="barB"></div>
+
+<div id="hud">
+  <div class="chip" id="brand">
+    <svg width="15" height="15" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7.5" fill="none" stroke="#FF5C29" stroke-width="2.6" stroke-dasharray="33 14" stroke-linecap="round" transform="rotate(40 10 10)"/><path d="M8 6.6l5 3.4-5 3.4z" fill="#FFF4E4"/></svg>
+    PLAYFORGE
+  </div>
+  <div class="chip mid" id="posChip">POSITION<b id="pos">1ST</b></div>
+  <div class="chip right" id="distChip">TRAINING RUN<b><span id="dist">0</span>/150M</b></div>
+  <div id="bigStat"><div id="bigN">0</div><div id="bigU">KM/H · <span id="shieldRow">◆◆◆</span></div></div>
+  <div id="stateTag">TRAINING DECK</div>
+</div>
+
+<div class="screen" id="title">
+  <div class="pre">PLAYFORGE PRESENTS</div>
+  <h1>GRIDLOCK<br>RUN</h1>
+  <div class="sub">MIDNIGHT CIRCUIT · 150M RELAY QUALIFIER · 3 RIVALS</div>
+  <div class="titleMeta">DISTRICT 01 // ASTER RELAY</div>
+  <button id="tapGo">TAP TO RUN</button>
+</div>
+
+<div class="screen hide" id="count"><div id="countN"></div></div>
+
+<div class="screen hide" id="results">
+  <div class="rp" id="resPre">SECTOR CLEAR</div>
+  <div id="resBig">1ST</div>
+  <div id="resSub">GRIDLOCK RUN · MIDNIGHT CIRCUIT</div>
+  <div id="resRows"></div>
+  <div class="rbtns">
+    <button class="rbtn go" id="btnAgain">RUN AGAIN</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+<div id="actionCue" aria-live="polite"></div>
+<div id="controlHint">SWIPE ACTIONS<b>← ↑ ↓ →</b></div>
+<button id="mute">♪</button>
+
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>

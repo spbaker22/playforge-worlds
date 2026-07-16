@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#090d18">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Playforge Family Preview</title>
+  <link rel="stylesheet" href="./launcher.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand"><span class="brandMark">▶</span><span>PLAYFORGE</span><em>FAMILY PREVIEW</em></div>
+      <div class="globalControls" aria-label="Shared game options">
+        <div class="compactControl"><span>SOUND</span><div class="seg mini" data-option="sound"><button data-value="on">ON</button><button data-value="off">OFF</button></div></div>
+        <div class="compactControl"><span>QUALITY</span><div class="seg mini" data-option="quality"><button data-value="auto">AUTO</button><button data-value="performance">FAST</button></div></div>
+      </div>
+    </header>
+
+    <section class="intro">
+      <div><p class="eyebrow">IPAD LANDSCAPE · PRIVATE BUILD</p><h1>Pick a game.<br><span>Make it yours.</span></h1></div>
+      <p class="introCopy">These previews are isolated from the live games. Choose a shorter round, gentler controls, or the full challenge—then play with real fingers.</p>
+    </section>
+
+    <section class="games" aria-label="Games">
+      <article class="gameCard golfCard">
+        <div class="art golfArt"><div class="sun"></div><div class="green"></div><div class="flag">◆</div><span class="gameNumber">01</span></div>
+        <div class="gameBody">
+          <div class="gameHeading"><div><p class="kicker">DUSK GARDEN</p><h2>Stackyard Golf</h2></div><p>Point at the target, drag for distance, release to putt.</p></div>
+          <div class="optionGrid">
+            <fieldset class="wide"><legend>ROUND</legend><div class="seg" data-option="golf.format"><button data-value="front-six">FRONT SIX</button><button data-value="quick-three">QUICK THREE</button><button data-value="practice">PRACTICE</button></div></fieldset>
+            <fieldset class="wide" id="practiceHole"><legend>PRACTICE HOLE</legend><div class="holePicker" data-option="golf.practiceHole"><button data-value="1">1</button><button data-value="2">2</button><button data-value="3">3</button><button data-value="4">4</button><button data-value="5">5</button><button data-value="6">6</button></div></fieldset>
+            <fieldset><legend>CUP ASSIST</legend><div class="seg" data-option="golf.cupAssist"><button data-value="standard">STANDARD</button><button data-value="family">FAMILY</button></div></fieldset>
+            <fieldset><legend>RIVALS</legend><div class="seg" data-option="golf.rivals"><button data-value="standard">STANDARD</button><button data-value="relaxed">RELAXED</button></div></fieldset>
+          </div>
+          <a class="playButton golfPlay" id="playGolf" href="./golf/index.html">PLAY GOLF <span>→</span></a>
+        </div>
+      </article>
+
+      <article class="gameCard runnerCard">
+        <div class="art runnerArt"><div class="cityLines"></div><div class="runnerGlyph">↗</div><span class="gameNumber">02</span></div>
+        <div class="gameBody">
+          <div class="gameHeading"><div><p class="kicker">MIDNIGHT CIRCUIT</p><h2>Gridlock Run</h2></div><p>Swipe one clear direction: jump, slide, or switch lanes.</p></div>
+          <div class="optionGrid">
+            <fieldset><legend>RUN</legend><div class="seg" data-option="runner.format"><button data-value="full-training">TRAINING</button><button data-value="final-relay">RELAY</button></div></fieldset>
+            <fieldset><legend>PACE</legend><div class="seg" data-option="runner.pace"><button data-value="standard">STANDARD</button><button data-value="calm">CALM</button></div></fieldset>
+            <fieldset><legend>SAFETY SHIELDS</legend><div class="seg" data-option="runner.safety"><button data-value="5">5</button><button data-value="3">3</button><button data-value="1">1</button></div></fieldset>
+            <fieldset><legend>SWIPE</legend><div class="seg" data-option="runner.swipe"><button data-value="standard">STANDARD</button><button data-value="easy">EASY</button></div></fieldset>
+          </div>
+          <a class="playButton runnerPlay" id="playRunner" href="./runner/index.html">START RUN <span>→</span></a>
+        </div>
+      </article>
+
+      <article class="gameCard ashfallCard">
+        <div class="art ashfallArt"><div class="emberSun"></div><div class="calderaRings"></div><div class="ashGlyph">◇</div><span class="gameNumber">03</span></div>
+        <div class="gameBody">
+          <div class="gameHeading"><div><p class="kicker">EMBER RIDGE</p><h2>Ashfall</h2></div><p>Follow your finger, read the warning rings, and tap to dash clear.</p></div>
+          <div class="optionGrid">
+            <fieldset class="wide"><legend>RUN</legend><div class="seg" data-option="ashfall.mode"><button data-value="quick">QUICK</button><button data-value="full">FULL</button></div></fieldset>
+            <fieldset class="wide"><legend>INTENSITY</legend><div class="seg" data-option="ashfall.intensity"><button data-value="calm">CALM</button><button data-value="standard">STANDARD</button><button data-value="inferno">INFERNO</button></div></fieldset>
+          </div>
+          <a class="playButton ashfallPlay" id="playAshfall" href="./ashfall/index.html">ENTER CALDERA <span>→</span></a>
+        </div>
+      </article>
+
+      <article class="gameCard wingsCard">
+        <div class="art wingsArt"><div class="ridge ridgeBack"></div><div class="ridge ridgeFront"></div><div class="wingGlyph">⌁</div><span class="gameNumber">04</span></div>
+        <div class="gameBody">
+          <div class="gameHeading"><div><p class="kicker">ALPINE FLIGHT CLUB</p><h2>Paper Wings</h2></div><p>Use one finger to bank and pitch through a hand-built mountain route.</p></div>
+          <div class="optionGrid threeOptions">
+            <fieldset><legend>ROUTE</legend><div class="seg" data-option="wings.route"><button data-value="quick">QUICK</button><button data-value="full">FULL</button></div></fieldset>
+            <fieldset><legend>CONTROL</legend><div class="seg" data-option="wings.control"><button data-value="guided">GUIDED</button><button data-value="direct">DIRECT</button></div></fieldset>
+            <fieldset class="wide"><legend>FIELD</legend><div class="seg" data-option="wings.race"><button data-value="solo">SOLO</button><button data-value="rivals">RIVALS</button></div></fieldset>
+          </div>
+          <a class="playButton wingsPlay" id="playWings" href="./wings/index.html">TAKE FLIGHT <span>→</span></a>
+        </div>
+      </article>
+
+      <article class="gameCard tideCard">
+        <div class="art tideArt"><div class="moon"></div><div class="tideLines"></div><div class="tideGlyph">⌝</div><span class="gameNumber">05</span></div>
+        <div class="gameBody">
+          <div class="gameHeading"><div><p class="kicker">HARBOR No. 7</p><h2>Low Tide</h2></div><p>Cast, wait for the bite, then manage the line all the way home.</p></div>
+          <div class="optionGrid threeOptions">
+            <fieldset><legend>WATCH</legend><div class="seg" data-option="tide.session"><button data-value="quick">QUICK</button><button data-value="full">FULL</button></div></fieldset>
+            <fieldset><legend>LINE</legend><div class="seg" data-option="tide.tension"><button data-value="relaxed">RELAXED</button><button data-value="standard">STANDARD</button></div></fieldset>
+            <fieldset class="wide"><legend>SCORING</legend><div class="seg" data-option="tide.scoring"><button data-value="haul">HAUL</button><button data-value="trophy">TROPHY</button></div></fieldset>
+          </div>
+          <a class="playButton tidePlay" id="playTide" href="./tide/index.html">BOARD THE SKIFF <span>→</span></a>
+        </div>
+      </article>
+    </section>
+
+    <footer><span>REAL-DEVICE TEST BUILD</span><button id="resetOptions" type="button">RESET ALL OPTIONS</button><span id="savedStatus" aria-live="polite">OPTIONS SAVE ON THIS IPAD</span></footer>
+  </main>
+  <script type="module" src="./launcher.js"></script>
+</body>
+</html>

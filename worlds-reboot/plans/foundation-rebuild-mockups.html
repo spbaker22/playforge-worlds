@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="icon" href="data:,">
+<title>Playforge — Foundation Rebuild Mockups</title>
+<style>
+  :root{
+    --ink:#f7f3ea;
+    --muted:#a8a9b4;
+    --line:rgba(255,255,255,.12);
+    --panel:#11131b;
+    --panel2:#171924;
+    --orange:#ff6b3d;
+    --gold:#ffd27a;
+    --cyan:#42e8ff;
+    --pink:#ff4fcb;
+    --green:#9ed277;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    color:var(--ink);
+    background:
+      radial-gradient(1000px 600px at 15% -10%,rgba(255,107,61,.12),transparent 60%),
+      radial-gradient(900px 700px at 90% 18%,rgba(66,232,255,.08),transparent 62%),
+      #090a0f;
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
+    line-height:1.5;
+  }
+  a{color:inherit}
+  .wrap{width:min(1480px,calc(100% - 44px));margin:auto}
+  nav{
+    position:sticky;top:0;z-index:20;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 0;
+    border-bottom:1px solid var(--line);
+    background:rgba(9,10,15,.82);
+    -webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
+  }
+  .brand{font-size:12px;font-weight:850;letter-spacing:.28em;text-transform:uppercase}
+  nav .links{display:flex;gap:24px;color:var(--muted);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+  nav a{text-decoration:none}
+  header{padding:94px 0 66px}
+  .eyebrow{font-size:12px;font-weight:850;letter-spacing:.28em;text-transform:uppercase;color:var(--gold)}
+  h1{font-size:clamp(54px,8vw,118px);line-height:.92;letter-spacing:-.055em;margin:20px 0 26px;max-width:1120px}
+  .lede{max-width:840px;font-size:clamp(19px,2.1vw,28px);line-height:1.35;color:#c9c8ce}
+  .status{display:flex;gap:10px;flex-wrap:wrap;margin-top:34px}
+  .badge{border:1px solid var(--line);border-radius:999px;padding:9px 13px;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;background:rgba(255,255,255,.04)}
+  .badge.warn{border-color:rgba(255,210,122,.4);color:var(--gold);background:rgba(255,210,122,.06)}
+  .verdicts{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:104px}
+  .verdict{
+    min-height:280px;padding:30px;border:1px solid var(--line);border-radius:26px;
+    background:linear-gradient(145deg,rgba(255,255,255,.065),rgba(255,255,255,.025));
+  }
+  .verdict.golf{box-shadow:inset 0 2px 0 rgba(255,210,122,.7)}
+  .verdict.run{box-shadow:inset 0 2px 0 rgba(66,232,255,.7)}
+  .verdict .kicker{font-size:11px;font-weight:850;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .verdict h2{font-size:clamp(28px,3.2vw,46px);line-height:1.05;margin:14px 0 16px}
+  .verdict p{font-size:16px;color:#b9bac3;max-width:620px}
+  .keep{margin-top:28px;padding-top:18px;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:13px}
+  .keep b{display:block;color:var(--ink);font-size:11px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:5px}
+  section{padding:44px 0 112px}
+  .section-head{display:grid;grid-template-columns:.9fr 1.1fr;gap:40px;align-items:end;margin-bottom:32px}
+  .num{font-size:12px;font-weight:850;letter-spacing:.24em;color:var(--muted);text-transform:uppercase}
+  h3{font-size:clamp(42px,6vw,82px);line-height:.95;letter-spacing:-.045em;margin:12px 0 0}
+  .section-head p{margin:0 0 4px;color:#bbbcc5;font-size:18px;max-width:700px}
+  .mock{
+    overflow:hidden;border:1px solid rgba(255,255,255,.15);border-radius:30px;background:#0c0d13;
+    box-shadow:0 40px 100px rgba(0,0,0,.38);
+  }
+  .mock svg{width:100%;height:auto;display:block}
+  .caption{display:flex;justify-content:space-between;gap:24px;align-items:center;padding:17px 22px;border-top:1px solid var(--line);color:var(--muted);font-size:12px;letter-spacing:.08em}
+  .caption b{color:var(--ink)}
+  .annotations{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:16px}
+  .note{padding:20px;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.035);min-height:150px}
+  .note i{display:grid;place-items:center;width:27px;height:27px;border-radius:50%;font-style:normal;font-size:12px;font-weight:900;margin-bottom:16px;color:#090a0f;background:var(--gold)}
+  .run-notes .note i{background:var(--cyan)}
+  .note b{display:block;font-size:14px;margin-bottom:6px}
+  .note span{font-size:13px;color:#a9abb6}
+  .flow{
+    margin-top:18px;padding:20px;border:1px solid var(--line);border-radius:18px;
+    display:flex;gap:9px;align-items:center;overflow:auto;background:rgba(255,255,255,.025);
+  }
+  .flow span{flex:0 0 auto;padding:8px 11px;border:1px solid var(--line);border-radius:999px;font-size:10px;font-weight:850;letter-spacing:.13em;text-transform:uppercase}
+  .flow em{font-style:normal;color:#626571}
+  .after-hole{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;margin-top:18px}
+  .card-demo{
+    min-height:270px;display:grid;place-items:center;text-align:center;border:1px solid var(--line);border-radius:22px;
+    background:radial-gradient(circle at 50% 25%,rgba(255,185,130,.18),transparent 50%),linear-gradient(145deg,#24223a,#11121a);
+  }
+  .card-demo small{display:block;color:#c5b7bd;letter-spacing:.24em;font-weight:750}
+  .card-demo strong{display:block;font-size:64px;line-height:1;margin:8px 0;background:linear-gradient(#fff9ea,#ffb08e);-webkit-background-clip:text;color:transparent}
+  .card-demo button{pointer-events:none;margin-top:22px;border:0;border-radius:999px;padding:15px 27px;background:linear-gradient(135deg,#ff8150,#ef4f28);color:white;font-weight:850;letter-spacing:.16em}
+  .contract{padding:24px;border:1px solid var(--line);border-radius:22px;background:var(--panel)}
+  .contract h4{font-size:20px;margin:0 0 14px}
+  .contract ul{margin:0;padding-left:19px;color:#b2b4be;font-size:14px}
+  .contract li+li{margin-top:9px}
+  .choice-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .choice{position:relative;padding:26px;border:1px solid var(--line);border-radius:22px;background:var(--panel);min-height:310px}
+  .choice.recommended{border-color:rgba(255,210,122,.42);box-shadow:inset 0 2px 0 var(--gold)}
+  .choice .tag{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:900}
+  .choice h4{font-size:23px;line-height:1.12;margin:14px 0 12px}
+  .choice p{font-size:14px;color:#adb0bb}
+  .opts{margin-top:22px;display:grid;gap:10px}
+  .opt{padding:11px 12px;border:1px solid var(--line);border-radius:13px;font-size:12px;color:#b6b8c1}
+  .opt b{color:var(--ink)}
+  footer{padding:40px 0 74px;border-top:1px solid var(--line);color:#9c9ea9;font-size:13px}
+  footer a{color:var(--ink);font-weight:750}
+  @media(max-width:900px){
+    .verdicts,.section-head,.after-hole,.choice-grid{grid-template-columns:1fr}
+    .annotations{grid-template-columns:1fr 1fr}
+    nav .links{display:none}
+  }
+  @media(max-width:560px){
+    .wrap{width:min(100% - 24px,1480px)}
+    header{padding-top:58px}
+    .verdicts{grid-template-columns:1fr}
+    .annotations{grid-template-columns:1fr}
+    .keep{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <div class="brand">Playforge / rebuild board</div>
+    <div class="links"><a href="#golf">Golf</a><a href="#runner">Gridlock</a><a href="#decisions">Decisions</a></div>
+  </nav>
+
+  <header>
+    <div class="eyebrow">Foundation review · discussion mockup</div>
+    <h1>Keep the engine.<br>Rebuild the feel.</h1>
+    <div class="lede">A focused Golf refactor and a game-layer Gridlock rebuild. These frames show the proposed interaction, camera, readability, and visual hierarchy before production code changes.</div>
+    <div class="status">
+      <div class="badge warn">Approval required</div>
+      <div class="badge">No game files changed</div>
+      <div class="badge">iPad-first</div>
+      <div class="badge">Sundown Mesa quality bar</div>
+    </div>
+  </header>
+
+  <div class="verdicts">
+    <article class="verdict golf">
+      <div class="kicker">Stackyard Golf</div>
+      <h2>Bounded foundation refactor</h2>
+      <p>The garden and ball model are worth keeping. The destructive resets come from invisible live buttons; the remaining roughness comes from camera, gesture, and state ownership.</p>
+      <div class="keep">
+        <div><b>Keep</b>Course, holes, atmosphere, baseline physics</div>
+        <div><b>Refactor</b>Aim, screens, camera entry, turn flow, tests</div>
+      </div>
+    </article>
+    <article class="verdict run">
+      <div class="kicker">Gridlock Run</div>
+      <h2>Game-layer rebuild</h2>
+      <p>The renderer can stay. The current course is internally misaligned by 22m, the failure flow loops, the controls are delayed, and the hero/world composition is below the benchmark.</p>
+      <div class="keep">
+        <div><b>Keep</b>Renderer, neon-rain premise, audio/fx, race concept</div>
+        <div><b>Rebuild</b>Course model, controls, flow, hero, route, camera, art</div>
+      </div>
+    </article>
+  </div>
+
+  <section id="golf">
+    <div class="section-head">
+      <div><div class="num">01 / Stackyard Golf</div><h3>Point where<br>the ball goes.</h3></div>
+      <p>The proposed control is direct and world-anchored: move a target on the turf, see a stable shot guide, then release. The camera finishes settling before aim begins and remains fixed under the finger.</p>
+    </div>
+
+    <div class="mock">
+      <svg viewBox="0 0 1365 768" role="img" aria-label="Stackyard Golf proposed direct-target aiming mockup">
+        <defs>
+          <linearGradient id="gSky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#373764"/><stop offset=".52" stop-color="#be7086"/><stop offset="1" stop-color="#f1b07e"/></linearGradient>
+          <linearGradient id="gTurf" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#86a65c"/><stop offset="1" stop-color="#3d5f3c"/></linearGradient>
+          <linearGradient id="gWall" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d191aa"/><stop offset="1" stop-color="#6f4a74"/></linearGradient>
+          <radialGradient id="gBall"><stop offset="0" stop-color="#fff"/><stop offset=".58" stop-color="#fff3ef"/><stop offset="1" stop-color="#dca8c1"/></radialGradient>
+          <filter id="gGlow"><feGaussianBlur stdDeviation="9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          <pattern id="gStripe" width="80" height="80" patternUnits="userSpaceOnUse"><rect width="80" height="40" fill="rgba(255,255,255,.035)"/></pattern>
+        </defs>
+        <rect width="1365" height="768" fill="url(#gSky)"/>
+        <circle cx="1070" cy="118" r="72" fill="#ffe8be" opacity=".66" filter="url(#gGlow)"/>
+        <path d="M0 260L120 185 270 250 430 148 570 242 755 174 920 256 1100 180 1365 260V390H0Z" fill="#6c4f70" opacity=".68"/>
+        <path d="M0 312L170 239 340 318 525 220 710 307 930 235 1110 306 1270 229 1365 267V430H0Z" fill="#8c6577"/>
+        <path d="M0 342C260 300 420 345 665 314S1080 300 1365 338V768H0Z" fill="#415640"/>
+        <g opacity=".92">
+          <path d="M82 360l27-94 27 94z" fill="#213b34"/><path d="M1225 342l22-82 22 82z" fill="#213b34"/>
+          <circle cx="220" cy="326" r="54" fill="#355444"/><rect x="216" y="326" width="8" height="66" fill="#493e39"/>
+          <circle cx="1160" cy="310" r="66" fill="#3d5947"/><rect x="1155" y="316" width="10" height="76" fill="#493e39"/>
+        </g>
+        <path d="M225 768L445 236H920L1175 768Z" fill="url(#gTurf)"/>
+        <path d="M225 768L445 236H920L1175 768Z" fill="url(#gStripe)" opacity=".8"/>
+        <path d="M222 768L440 232H458L267 768Z" fill="url(#gWall)"/>
+        <path d="M1178 768L926 232H909L1136 768Z" fill="url(#gWall)"/>
+        <path d="M440 232H926L918 257H430Z" fill="url(#gWall)"/>
+        <g fill="none" stroke="#ffe5aa" stroke-width="2" opacity=".48">
+          <path d="M82 176Q354 118 654 166T1280 145"/>
+        </g>
+        <g fill="#fff3c8" filter="url(#gGlow)">
+          <circle cx="130" cy="166" r="4"/><circle cx="270" cy="147" r="4"/><circle cx="415" cy="146" r="4"/><circle cx="570" cy="159" r="4"/><circle cx="735" cy="157" r="4"/><circle cx="905" cy="142" r="4"/><circle cx="1080" cy="143" r="4"/><circle cx="1230" cy="144" r="4"/>
+        </g>
+
+        <g transform="translate(720 270)">
+          <ellipse cx="0" cy="9" rx="27" ry="9" fill="#151416" opacity=".8"/>
+          <ellipse cx="0" cy="7" rx="21" ry="7" fill="none" stroke="#fff4dd" stroke-width="4"/>
+          <path d="M0 6V-96" stroke="#fff4e2" stroke-width="5"/>
+          <path d="M3-94h70v43H3z" fill="#ff6845"/><text x="38" y="-65" fill="white" font-size="21" font-weight="850" text-anchor="middle">2</text>
+        </g>
+
+        <g>
+          <path d="M512 590C552 545 602 507 660 466S727 410 773 365" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="20" stroke-linecap="round"/>
+          <path d="M512 590C552 545 602 507 660 466S727 410 773 365" fill="none" stroke="#fff6d3" stroke-width="5" stroke-linecap="round" stroke-dasharray="12 12" filter="url(#gGlow)"/>
+          <circle cx="773" cy="365" r="43" fill="rgba(255,210,122,.13)" stroke="#ffd27a" stroke-width="4"/>
+          <circle cx="773" cy="365" r="12" fill="#ffd27a" filter="url(#gGlow)"/>
+          <path d="M752 338l21-21 21 21" fill="none" stroke="#ffd27a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          <text x="773" y="425" fill="#fff4df" font-size="14" font-weight="800" letter-spacing="3" text-anchor="middle">DRAG TARGET</text>
+        </g>
+        <ellipse cx="511" cy="607" rx="50" ry="15" fill="#1b261e" opacity=".55"/>
+        <circle cx="511" cy="585" r="31" fill="url(#gBall)" filter="url(#gGlow)"/>
+        <circle cx="501" cy="575" r="6" fill="white" opacity=".8"/>
+
+        <g transform="translate(42 42)" fill="#fff8ed">
+          <circle cx="8" cy="8" r="7" fill="none" stroke="#ff6b3d" stroke-width="3" stroke-dasharray="26 10"/>
+          <text x="27" y="13" font-size="12" font-weight="800" letter-spacing="3">PLAYFORGE</text>
+        </g>
+        <g transform="translate(655 36)" text-anchor="middle" fill="#fff8ed"><text font-size="10" letter-spacing="3" opacity=".7">SHOT</text><text y="28" font-size="28" font-weight="850">2</text></g>
+        <g transform="translate(1270 36)" text-anchor="end" fill="#fff8ed"><text font-size="10" letter-spacing="3" opacity=".7">HOLE</text><text y="28" font-size="22" font-weight="850">2 / 6</text></g>
+
+        <g transform="translate(44 621)">
+          <rect width="182" height="102" rx="23" fill="rgba(17,18,27,.62)" stroke="rgba(255,255,255,.25)"/>
+          <text x="22" y="28" fill="#fff6e8" font-size="11" font-weight="800" letter-spacing="2">PUTT STRENGTH</text>
+          <rect x="22" y="50" width="138" height="12" rx="6" fill="rgba(255,255,255,.12)"/>
+          <rect x="22" y="50" width="88" height="12" rx="6" fill="#ffd27a" filter="url(#gGlow)"/>
+          <text x="22" y="84" fill="#c9c5c0" font-size="11" letter-spacing="1.5">RELEASE TO PUTT</text>
+        </g>
+        <g font-size="13" font-weight="900" text-anchor="middle">
+          <circle cx="794" cy="342" r="15" fill="#ffd27a"/><text x="794" y="347" fill="#121117">1</text>
+          <circle cx="537" cy="542" r="15" fill="#ffd27a"/><text x="537" y="547" fill="#121117">2</text>
+          <circle cx="632" cy="107" r="15" fill="#ffd27a"/><text x="632" y="112" fill="#121117">3</text>
+          <circle cx="1270" cy="698" r="15" fill="#ffd27a"/><text x="1270" y="703" fill="#121117">4</text>
+        </g>
+        <text x="1268" y="735" text-anchor="end" fill="#fff8e9" font-size="11" font-weight="800" letter-spacing="2.4">CONCEPT FRAME · DIRECT TARGET</text>
+      </svg>
+      <div class="caption"><span><b>Proposed gameplay frame</b> · visual/control intent, not final art</span><span>iPad landscape · touch-first</span></div>
+    </div>
+
+    <div class="annotations">
+      <div class="note"><i>1</i><b>World-space target</b><span>The reticle lives on the turf. Camera angle and frame-rate changes cannot rotate the intended shot.</span></div>
+      <div class="note"><i>2</i><b>Stable shot preview</b><span>Deadzone and smoothing stop small finger wobble. The guide appears only after deliberate motion.</span></div>
+      <div class="note"><i>3</i><b>Locked camera</b><span>Aim activates only after the camera is ready. Position, look, sway, and FOV freeze for the gesture.</span></div>
+      <div class="note"><i>4</i><b>Quiet HUD</b><span>Shot, hole, score, and one state cue. Hidden screens become inert, not merely transparent.</span></div>
+    </div>
+    <div class="flow"><span>Aim enter</span><em>→</em><span>Aim ready</span><em>→</em><span>Aiming</span><em>→</em><span>Rolling</span><em>→</em><span>Settling</span><em>→</em><span>Next lie</span><em>or</em><span>Holed</span></div>
+    <div class="after-hole">
+      <div class="card-demo"><div><small>HOLE 2 · THE HEDGE</small><strong>BIRDIE</strong><small>YOU 2 · TOTAL −1</small><button>NEXT HOLE</button></div></div>
+      <div class="contract"><h4>Post-hole contract</h4><ul><li>One visible action: Next Hole.</li><li>No hold gesture and no invisible live controls.</li><li>The button is valid only in the Hole Card state.</li><li>Ball, score, camera, and gesture state enter the next hole together.</li><li>Play Again exists only on the final card.</li></ul></div>
+    </div>
+  </section>
+
+  <section id="runner">
+    <div class="section-head">
+      <div><div class="num">02 / Gridlock Run</div><h3>Read it.<br>Choose it. Move.</h3></div>
+      <p>The proposed Gridlock is a close, three-lane action runner. Hazards are staged as readable decisions, the courier is the hero of the frame, and failure rewinds locally instead of replaying the first five seconds.</p>
+    </div>
+
+    <div class="mock">
+      <svg viewBox="0 0 1365 768" role="img" aria-label="Gridlock Run proposed three-lane runner mockup">
+        <defs>
+          <linearGradient id="rSky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#080c23"/><stop offset=".54" stop-color="#3e1e62"/><stop offset="1" stop-color="#b24d86"/></linearGradient>
+          <linearGradient id="rRoad" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#303243"/><stop offset=".55" stop-color="#171b27"/><stop offset="1" stop-color="#090c14"/></linearGradient>
+          <linearGradient id="rSuit" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d8edf2"/><stop offset=".32" stop-color="#3e6688"/><stop offset="1" stop-color="#192438"/></linearGradient>
+          <linearGradient id="rWarn" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#42e8ff"/><stop offset=".5" stop-color="#fff7da"/><stop offset="1" stop-color="#ff4fcb"/></linearGradient>
+          <filter id="rGlow"><feGaussianBlur stdDeviation="9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          <pattern id="rWindows" width="38" height="34" patternUnits="userSpaceOnUse"><rect x="7" y="6" width="10" height="6" rx="1" fill="#ffd58c" opacity=".7"/><rect x="24" y="18" width="8" height="6" rx="1" fill="#58d9ff" opacity=".55"/></pattern>
+          <pattern id="rWet" width="90" height="90" patternUnits="userSpaceOnUse"><path d="M8 80L70 18" stroke="rgba(130,210,255,.05)" stroke-width="7"/><path d="M48 94L96 46" stroke="rgba(255,80,200,.045)" stroke-width="3"/></pattern>
+        </defs>
+        <rect width="1365" height="768" fill="url(#rSky)"/>
+        <circle cx="1008" cy="164" r="90" fill="#f7a1ce" opacity=".26" filter="url(#rGlow)"/>
+
+        <g fill="#0a0d19" stroke="rgba(66,232,255,.12)">
+          <path d="M0 140h150v410H0z"/><path d="M126 76h190v486H126z"/><path d="M292 184h132v345H292z"/>
+          <path d="M1090 92h180v484h-180z"/><path d="M1215 30h150v552h-150z"/><path d="M965 204h150v360H965z"/>
+        </g>
+        <g opacity=".92"><path d="M0 140h150v410H0z" fill="url(#rWindows)"/><path d="M126 76h190v486H126z" fill="url(#rWindows)"/><path d="M292 184h132v345H292z" fill="url(#rWindows)"/><path d="M1090 92h180v484h-180z" fill="url(#rWindows)"/><path d="M1215 30h150v552h-150z" fill="url(#rWindows)"/><path d="M965 204h150v360H965z" fill="url(#rWindows)"/></g>
+        <g fill="#101326" opacity=".92">
+          <path d="M390 255h110v263H390z"/><path d="M875 246h110v292H875z"/><path d="M485 206h75v273H485z"/><path d="M806 174h80v321H806z"/>
+        </g>
+        <g opacity=".65" filter="url(#rGlow)"><path d="M355 289h90" stroke="#ff4fcb" stroke-width="5"/><path d="M918 268h98" stroke="#42e8ff" stroke-width="5"/><ellipse cx="1030" cy="322" rx="75" ry="18" fill="none" stroke="#ff4fcb" stroke-width="4"/></g>
+
+        <path d="M168 768L556 248H810L1202 768Z" fill="url(#rRoad)"/>
+        <path d="M168 768L556 248H810L1202 768Z" fill="url(#rWet)"/>
+        <path d="M168 768L556 248" stroke="#42e8ff" stroke-width="8" filter="url(#rGlow)"/>
+        <path d="M1202 768L810 248" stroke="#ff4fcb" stroke-width="8" filter="url(#rGlow)"/>
+        <path d="M512 768L642 248" stroke="rgba(255,255,255,.23)" stroke-width="3" stroke-dasharray="18 22"/>
+        <path d="M854 768L726 248" stroke="rgba(255,255,255,.23)" stroke-width="3" stroke-dasharray="18 22"/>
+
+        <g>
+          <path d="M452 431H914L944 470H422Z" fill="#070914"/>
+          <path d="M422 470H944" stroke="url(#rWarn)" stroke-width="8" filter="url(#rGlow)"/>
+          <path d="M445 423H920" stroke="#ffcc59" stroke-width="5" stroke-dasharray="18 13"/>
+          <path d="M477 399L889 399" stroke="rgba(255,204,89,.34)" stroke-width="30"/>
+          <text x="682" y="390" fill="#fff3c6" font-size="13" font-weight="900" letter-spacing="3" text-anchor="middle">JUMP WINDOW</text>
+        </g>
+        <g transform="translate(680 486)">
+          <path d="M-160 0V-70M160 0V-70M-160-70H160" fill="none" stroke="#42e8ff" stroke-width="5" filter="url(#rGlow)"/>
+          <rect x="-126" y="-62" width="252" height="44" rx="7" fill="#111425" stroke="rgba(66,232,255,.7)"/>
+          <text y="-33" fill="#e9fbff" font-size="17" font-weight="900" letter-spacing="4" text-anchor="middle">CHECKPOINT 02</text>
+        </g>
+
+        <g transform="translate(684 602)">
+          <ellipse cx="0" cy="105" rx="78" ry="22" fill="#05070b" opacity=".7"/>
+          <path d="M-18-96Q0-120 22-96L30-58Q10-44-26-58Z" fill="#1a2538" stroke="#93e9f6" stroke-width="3"/>
+          <path d="M-19-88H22L19-71H-21Z" fill="#42e8ff" filter="url(#rGlow)"/>
+          <path d="M-36-52Q0-70 42-50L55 30Q8 50-50 25Z" fill="url(#rSuit)" stroke="#a8dbe5" stroke-width="3"/>
+          <path d="M31-47L73-15L55 11L20-15Z" fill="#c14993"/><path d="M55-45L92-70L70-30Z" fill="#ff4fcb" opacity=".9" filter="url(#rGlow)"/>
+          <rect x="-60" y="-37" width="19" height="69" rx="8" fill="#21324d" stroke="#42e8ff" stroke-width="3"/>
+          <rect x="46" y="-37" width="19" height="69" rx="8" fill="#21324d" stroke="#ff4fcb" stroke-width="3"/>
+          <circle cx="-53" cy="37" r="10" fill="#8aa9bd"/><circle cx="58" cy="37" r="10" fill="#8aa9bd"/>
+          <path d="M-31 30L-55 74L-38 104" fill="none" stroke="#d0e5e9" stroke-width="19" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M25 31L48 70L36 103" fill="none" stroke="#416987" stroke-width="19" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="-55" cy="74" r="11" fill="#1a2538"/><circle cx="48" cy="70" r="11" fill="#1a2538"/>
+          <path d="M-38 104L-64 109" stroke="#42e8ff" stroke-width="12" stroke-linecap="round" filter="url(#rGlow)"/>
+          <path d="M36 103L61 108" stroke="#ff4fcb" stroke-width="12" stroke-linecap="round" filter="url(#rGlow)"/>
+          <path d="M-44-28L-80 4L-69 35" fill="none" stroke="#89a9bd" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M49-28L80-2L73 30" fill="none" stroke="#d5e6e8" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="-70" cy="37" r="9" fill="#42e8ff" filter="url(#rGlow)"/><circle cx="74" cy="32" r="9" fill="#ff4fcb" filter="url(#rGlow)"/>
+          <path d="M-47-40H50" stroke="#ffdc76" stroke-width="5" stroke-dasharray="12 8" filter="url(#rGlow)"/>
+        </g>
+
+        <g transform="translate(602 340) scale(.38)" opacity=".86">
+          <circle cy="-42" r="22" fill="#df7cba"/><path d="M-25-18H25L34 55H-33Z" fill="#c03e91"/><path d="M-18 53L-25 118M18 53L26 118" stroke="#dde8ed" stroke-width="13"/>
+        </g>
+        <g transform="translate(772 322) scale(.31)" opacity=".8">
+          <circle cy="-42" r="22" fill="#5ff1dc"/><path d="M-25-18H25L34 55H-33Z" fill="#268d86"/><path d="M-18 53L-25 118M18 53L26 118" stroke="#dde8ed" stroke-width="13"/>
+        </g>
+
+        <g transform="translate(42 42)" fill="#f0faff"><circle cx="8" cy="8" r="7" fill="none" stroke="#42e8ff" stroke-width="3" stroke-dasharray="26 10"/><text x="27" y="13" font-size="12" font-weight="800" letter-spacing="3">PLAYFORGE</text></g>
+        <g transform="translate(654 36)" text-anchor="middle" fill="#f0faff"><text font-size="10" letter-spacing="3" opacity=".7">POSITION</text><text y="28" font-size="28" font-weight="850">3RD</text></g>
+        <g transform="translate(1300 36)" text-anchor="end" fill="#f0faff"><text font-size="10" letter-spacing="3" opacity=".7">DISTANCE</text><text y="28" font-size="22" font-weight="850">118 / 640M</text></g>
+        <g transform="translate(44 608)">
+          <rect width="174" height="112" rx="24" fill="rgba(8,11,20,.66)" stroke="rgba(255,255,255,.24)"/>
+          <text x="87" y="24" text-anchor="middle" fill="#f0faff" font-size="10" font-weight="850" letter-spacing="2">SWIPE ACTIONS</text>
+          <path d="M87 79V44M87 44l-10 12M87 44l10 12M87 79V99M87 99l-10-12M87 99l10-12M75 72H39M39 72l12-10M39 72l12 10M99 72h36M135 72l-12-10M135 72l-12 10" fill="none" stroke="#eafaff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+        <g transform="translate(1210 636)" fill="#f1fbff" text-anchor="end"><text font-size="11" letter-spacing="2" opacity=".72">SHIELDS</text><text y="32" font-size="23" fill="#42e8ff" filter="url(#rGlow)">◆ ◆ ◆</text></g>
+        <g font-size="13" font-weight="900" text-anchor="middle">
+          <circle cx="737" cy="493" r="15" fill="#42e8ff"/><text x="737" y="498" fill="#091018">1</text>
+          <circle cx="775" cy="592" r="15" fill="#42e8ff"/><text x="775" y="597" fill="#091018">2</text>
+          <circle cx="907" cy="407" r="15" fill="#42e8ff"/><text x="907" y="412" fill="#091018">3</text>
+          <circle cx="242" cy="675" r="15" fill="#42e8ff"/><text x="242" y="680" fill="#091018">4</text>
+        </g>
+        <text x="1268" y="735" text-anchor="end" fill="#eafdff" font-size="11" font-weight="800" letter-spacing="2.4">CONCEPT FRAME · THREE-LANE RUNNER</text>
+      </svg>
+      <div class="caption"><span><b>Proposed gameplay frame</b> · visual/control intent, not final art</span><span>Closer hero · authored hazard · local recovery</span></div>
+    </div>
+
+    <div class="annotations run-notes">
+      <div class="note"><i>1</i><b>Checkpoint before challenge</b><span>Learning and progress are banked before a lethal combination. A miss never repeats the opening.</span></div>
+      <div class="note"><i>2</i><b>Hero-scale courier</b><span>Articulated silhouette, layered materials, readable equipment, and enough screen presence to carry the game.</span></div>
+      <div class="note"><i>3</i><b>Readable hazard grammar</b><span>Warning zone, edge light, action window, visible gap, and contrasting landing surface all tell the same story.</span></div>
+      <div class="note"><i>4</i><b>Directional input</b><span>Up, down, left, and right trigger on movement threshold. No finger-up jump, hold delay, or dead timing band.</span></div>
+    </div>
+    <div class="flow"><span>Race</span><em>→</em><span>Action buffered</span><em>→</em><span>Hazard</span><em>→</em><span>Landing</span><em>or</em><span>Crash</span><em>→</em><span>Local tether</span><em>→</em><span>Checkpoint</span></div>
+  </section>
+
+  <section id="decisions">
+    <div class="section-head">
+      <div><div class="num">03 / Approval gates</div><h3>Three choices<br>before code.</h3></div>
+      <p>The foundation can support alternatives, but these decisions change the player contract and visual production. Approving them first prevents another technically complete game that feels wrong on the iPad.</p>
+    </div>
+    <div class="choice-grid">
+      <article class="choice recommended"><div class="tag">Recommended</div><h4>Golf: direct target</h4><p>The guide follows where the player points in the world. It matches the expectation that the finger should point the ball toward the cup.</p><div class="opts"><div class="opt"><b>Choose A:</b> direct reticle</div><div class="opt"><b>Choose B:</b> pull-back slingshot</div></div></article>
+      <article class="choice recommended"><div class="tag">Recommended</div><h4>Gridlock: three lanes</h4><p>Left/right choices add real agency; up/down handle jump and slide. The simpler alternative keeps the runner fixed in the centre.</p><div class="opts"><div class="opt"><b>Choose A:</b> four-direction runner</div><div class="opt"><b>Choose B:</b> up/down rhythm runner</div></div></article>
+      <article class="choice recommended"><div class="tag">Recommended</div><h4>Hero: athletic courier</h4><p>A semi-human android silhouette with visor, fabric/shell layers, parcel rig, expressive motion, and distinctive rival colorways.</p><div class="opts"><div class="opt"><b>Choose A:</b> courier/android</div><div class="opt"><b>Choose B:</b> fully robotic redesign</div></div></article>
+    </div>
+  </section>
+
+  <footer>
+    Full phased plan, test matrix, source evidence, and implementation boundaries: <a href="./foundation-rebuild-gameplan.md">foundation-rebuild-gameplan.md</a>. This is an approval artifact; Stackyard Golf and Gridlock Run source/build files were not modified.
+  </footer>
+</div>
+</body>
+</html>

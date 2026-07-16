@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#07151c">
+  <meta name="description" content="Low Tide — a cinematic night-harbor fishing game from Playforge.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%2307151c'/%3E%3Cpath d='M13 37c9-6 17-6 25 0 5 4 10 3 14 0' fill='none' stroke='%23e1ad6c' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='32' cy='25' r='7' fill='%23f1e5cf'/%3E%3C/svg%3E">
+  <title>Low Tide — Night Harbor</title>
+</head>
+<body>
+  <canvas id="gl" aria-label="Low Tide night harbor"></canvas>
+  <div id="gradeOv"></div>
+  <div id="grain"></div>
+  <div id="touchSurface" aria-label="Fishing controls"></div>
+
+  <header id="hud" aria-live="polite">
+    <div id="brand" class="hud-label"><span class="brand-mark"></span>PLAYFORGE / LOW TIDE</div>
+    <div id="clockBlock"><span>NIGHT WATCH</span><strong id="clock">1:30</strong></div>
+    <div id="haulBlock"><span id="scoreLabel">HAUL</span><strong id="haul">0.0 <small>KG</small></strong><em id="points">0 PTS</em></div>
+    <aside id="rivals" aria-label="Rival boats">
+      <div><i class="nav red"></i><span>MARA / NORTH PIER</span><b id="maraScore">0.0 KG</b></div>
+      <div><i class="nav green"></i><span>ELIAS / LIGHTSHIP</span><b id="eliasScore">0.0 KG</b></div>
+    </aside>
+    <div id="stateTag">DRAG BACK · RELEASE TO CAST</div>
+    <div id="castMeter"><span id="castFill"></span><b>CAST</b></div>
+    <section id="tensionDock" aria-label="Line tension">
+      <div class="tension-copy"><span>LINE TENSION</span><b id="tensionWord">STEADY</b></div>
+      <div class="tension-track"><span id="tensionFill"></span><i id="tensionLimit"></i></div>
+      <small id="reelPrompt">HOLD TO REEL · RELEASE TO EASE</small>
+    </section>
+  </header>
+
+  <div id="biteCue" aria-hidden="true"><span>BITE</span><small>TAP NOW</small></div>
+  <div id="lastFish" aria-hidden="true">LAST FISH</div>
+
+  <main>
+    <section class="screen" id="title" data-screen>
+      <div class="title-copy">
+        <p class="eyebrow">PLAYFORGE PRESENTS / HARBOR No. 7</p>
+        <h1>LOW<br><i>TIDE</i></h1>
+        <p class="title-sub">The fleet is sleeping.<br>The deep water is not.</p>
+        <button id="enterBtn" class="text-action">BOARD THE SKIFF <span>↗</span></button>
+        <p id="previewStamp">NIGHT WATCH / 90 MINUTES SOUTH OF SHORE</p>
+      </div>
+    </section>
+
+    <section class="screen hide" id="instructions" data-screen hidden inert aria-hidden="true">
+      <div class="briefing">
+        <p class="eyebrow">DECK BRIEFING</p>
+        <h2>Three motions.<br>One good line.</h2>
+        <div class="steps">
+          <article><b>01</b><span><strong>CAST</strong>Drag back, then release. A longer pull sends the float farther.</span></article>
+          <article><b>02</b><span><strong>HOOK</strong>Wait for the float and the BITE cue. Tap once.</span></article>
+          <article><b>03</b><span><strong>REEL</strong>Hold anywhere to reel. Release before the line turns hot.</span></article>
+        </div>
+        <div class="brief-meta"><span id="sessionMeta">FULL WATCH · 90 SEC</span><span id="tensionMeta">STANDARD LINE</span><span id="scoringMeta">HAUL SCORING</span></div>
+        <button id="launchBtn" class="solid-action">CAST OFF</button>
+      </div>
+    </section>
+
+    <section class="screen hide" id="count" data-screen hidden inert aria-hidden="true">
+      <p>HARBOR LIGHTS DOWN</p>
+      <div id="countN">3</div>
+    </section>
+
+    <section class="screen hide" id="outcome" data-screen hidden inert aria-hidden="true">
+      <div class="outcome-card">
+        <p id="outcomeKicker">DEEP WATER</p>
+        <h2 id="outcomeTitle">MOON BASS</h2>
+        <div id="outcomeWeight">8.4 <small>KG</small></div>
+        <p id="outcomeNote">A clean line under the pier lights.</p>
+        <button id="nextBtn" class="solid-action">NEXT CAST</button>
+      </div>
+    </section>
+
+    <section class="screen hide" id="results" data-screen hidden inert aria-hidden="true">
+      <div class="results-copy">
+        <p class="eyebrow">THE NIGHT'S LEDGER</p>
+        <h2 id="resultBig">0.0 <small>KG</small></h2>
+        <p id="resultRank">3RD IN THE HARBOR</p>
+        <div id="resultRows"></div>
+        <button id="replayBtn" class="solid-action">FISH ANOTHER WATCH</button>
+      </div>
+    </section>
+  </main>
+
+  <button id="mute" aria-label="Toggle sound">SND</button>
+  <div id="rotate"><span>↻</span><b>TURN THE iPAD</b><small>Low Tide plays in landscape.</small></div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
