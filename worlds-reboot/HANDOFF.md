@@ -1,6 +1,24 @@
-# CURRENT STATUS — 2026-07-15
+# HISTORICAL ARCHIVE — DO NOT USE AS CURRENT OPERATING INSTRUCTIONS
 
-This section is the authority for the current practical-preview state. The historical handoff below remains intact for design, release-safety, and implementation context; older shipment language does not override this status.
+The authoritative new-account and current-session handoff is
+[`../NEW_ACCOUNT_HANDOFF.md`](../NEW_ACCOUNT_HANDOFF.md). Read it first and use
+it for repository setup, source/artifact authority, builds, tests, iPad access,
+game status, next actions, and release boundaries.
+
+This file is preserved as a layered historical record. Sections below contain
+obsolete status claims, hard-coded LAN addresses, unsafe default-output build
+commands, and commands for a dormant release pipeline tied to older frozen
+inputs. Do not execute a setup, build, copy, parity, Phase 3/4, or positive
+release command from this file merely because it appears below. In any conflict,
+`../NEW_ACCOUNT_HANDOFF.md` wins.
+
+---
+
+# STATUS SNAPSHOT — 2026-07-15 (SUPERSEDED BY THE NEW HANDOFF)
+
+This section was the authority for the practical-preview state before the
+consolidated new-account handoff was written. It remains here for provenance;
+older shipment language does not override the current handoff.
 
 - Intended GitHub repository: `spbaker22/playforge-worlds` (`https://github.com/spbaker22/playforge-worlds`).
 - Active project: `worlds-reboot/`.
