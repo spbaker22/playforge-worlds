@@ -1,6 +1,6 @@
 # Playforge Worlds — authoritative new-account handoff
 
-Last reconciled: 2026-07-15 (America/Phoenix)
+Last reconciled: 2026-07-19 (America/Phoenix)
 
 Repository: <https://github.com/spbaker22/playforge-worlds>
 
@@ -16,22 +16,133 @@ retained only as a historical record of design work and release-safety work.
 
 ## Read this first
 
-The current deliverable is an isolated, immutable five-game family-test build:
+The protected family-test baseline is the isolated, immutable five-game build:
 
 `worlds-reboot/preview-dist/family-preview-20260715-7/`
 
-Preview 7 has passed focused unit tests and practical built-browser checks for
-all five games. It has **not** yet been physically approved on an iPad. The next
-product step is a real family playtest on the iPad, followed by narrowly scoped
-tuning based on observed behavior. It is not a production release, and none of
-the protected official/reference artifacts have been promoted to Preview 7.
+Preview 7 passed focused unit tests and practical built-browser checks for all
+five games. An initial physical iPad play found the games functionally working,
+but it did not grant final game-by-game product approval. Preview 7 is not a
+production release, and none of the protected official/reference artifacts
+have been promoted to it.
+
+Paper Wings now has a separate, substantially expanded implementation on
+`codex/paper-wings-sprint1-2026-07-17`. That branch is verified but is **not**
+merged into `main`, is **not** part of Preview 7, and has **not** been promoted
+or published as a new family preview. Its real-finger steering, layered action
+grammar, audio, heat, and sustained frame pacing still need a physical iPad
+feel pass.
 
 Use this exact status language:
 
-> Preview 7 is automated/browser-verified and ready for physical iPad family
-> testing. Physical device approval and production promotion are still pending.
+> Preview 7 remains the immutable automated/browser-verified baseline. Its
+> initial iPad play found no functional failures, but final product approval and
+> production promotion are still pending. The expanded Paper Wings branch is
+> separately automated/browser-verified and still awaits physical iPad feel
+> testing.
 
 Do not describe it as shipped, iPad-approved, production-ready, or promoted.
+
+### Post-playtest product decision — 2026-07-17
+
+The initial physical iPad playtest found the games functionally working. Product
+acceptance is still game-by-game, however:
+
+- Stackyard Golf and Gridlock Run remain accepted foundations.
+- **Ashfall is rejected in its current form and backlogged.** Its technical
+  checks still pass, but the playtest found the survival loop too basic and
+  boring. Do not tune, expand, promote, or describe the current Ashfall as
+  approved. Revisit it later as a core-gameplay redesign, not an effects pass.
+- Paper Wings was selected for the first full depth rebuild. That expansion is
+  now implemented and verified on its feature branch, but it is not merged,
+  included in Preview 7, physically feel-approved, or promoted. Low Tide remains
+  the next premise/depth review candidate after the Paper Wings device pass.
+
+This product decision supersedes any older statement that treats automated or
+browser verification as gameplay approval.
+
+### Portfolio gameplay-depth decision — 2026-07-17
+
+The user identified a shared design failure across the current portfolio: the
+games are polished and functional, but too many are essentially one-mechanic
+vertical slices with little escalation, variety, mastery, or replay motivation.
+Visual quality, difficulty options, score totals, and additional hazards do not
+by themselves count as gameplay depth.
+
+Do not implement or approve another world from only a premise, one touch verb,
+and one repeating challenge. Before implementation, every game proposal must
+explain:
+
+1. the core player fantasy and at least three complementary actions;
+2. interacting systems that create genuine decisions rather than parallel
+   features;
+3. multiple mission or level structures, not only harder repetitions;
+4. within-level escalation, surprises, and a memorable finale;
+5. risk/reward, mastery, scoring/combo, or opponent behavior;
+6. short-term objectives and longer-term progression/unlocks;
+7. why a player would immediately replay and what changes on that replay.
+
+Paper Wings remains a liked premise. The gate-only statement now applies only
+to the protected Preview 7 baseline and historical reference build; it is no
+longer an accurate description of the feature-branch source. The approved
+broader aerial-action direction has been implemented with racing, stunts,
+target/combat challenges, rescue, route and energy decisions, distinct missions,
+a boss finale, and campaign progression. Preserve the accessible layered touch
+grammar during device tuning; do not flatten the campaign back into a gate race.
+
+### Paper Wings expansion status — feature branch only
+
+Branch: `codex/paper-wings-sprint1-2026-07-17`
+
+The branch contains an eight-mission campaign:
+
+1. Flight School
+2. Ridge Race
+3. Target Run
+4. Stunt Trial
+5. Mountain Rescue
+6. Storm Escape
+7. Ace Pursuit
+8. Skybreaker Finale
+
+Its touch grammar layers complementary actions without crowding the screen:
+
+- the left 65% of the screen owns continuous steering;
+- a right-side tap fires or performs the current context action;
+- a 220 ms right-side hold engages boost or shield according to context;
+- a 44 px directional flick performs an aerobatic trick;
+- steering remains active while an independent right-side action is used.
+
+The campaign combines altitude/speed/energy tradeoffs, thermals and wind,
+boost/shield/hull management, route forks and spatial hazards, deterministic
+rivals, stunts and combo scoring, target/projectile combat, rescue pickups and
+precision drops, multi-phase objectives, a three-phase boss, four loadouts, and
+versioned monotonic local progression. Mission unlocks, best results, stars,
+objective completion, and replay are campaign-owned rather than decorative UI.
+
+Verification for this branch is complete at the automated/browser level:
+
+- Wings units: **121/121 pass**;
+- launcher/preview option units: **10/10 pass**;
+- combined focused branch checks: **131/131 pass**;
+- the live built-browser campaign harness ended with
+  **`WINGS_CAMPAIGN_BROWSER_OK`**, including map/briefing/play/results flow,
+  simultaneous steering plus right-side actions, pause cleanup, replay, Flight
+  School completion, and Skybreaker completion;
+- all changed JavaScript passed syntax checking and `git diff --check` was clean.
+
+The immutable local test artifact used for the successful browser run was:
+
+```text
+/private/tmp/playforge-wings-runtime-cadence-final.MmbWkd/wings/index.html
+SHA-256: 88ac2272e3fc8e9a94cd7e1a73c8db329f90eab488e7a05035d05df12b5b2edd
+```
+
+That `/private/tmp` path is local provenance, not a durable repository
+candidate; a fresh account should not expect the file to exist. The protected
+`worlds-reboot/wings/dist/index.html` and the complete
+`worlds-reboot/preview-dist/family-preview-20260715-7/` tree remained untouched.
+No merge, new preview publication, or production promotion has occurred.
 
 ## Executive state
 
@@ -40,12 +151,12 @@ Do not describe it as shipped, iPad-approved, production-ready, or promoted.
 | Product | Five touch-first browser games in one launcher |
 | Candidate | `family-preview-20260715-7` |
 | Games | Stackyard Golf, Gridlock Run, Ashfall, Paper Wings, Low Tide |
-| Automated status | 101 focused unit checks pass; built five-game browser and isolated touch/MENU checks pass |
-| Device status | Real iPad playtest still required |
-| Source status | All five current game sources and shared runtime are committed |
+| Automated status | Preview 7: 101 focused units plus its built-browser checks pass. Paper Wings branch: 131/131 focused units and live `WINGS_CAMPAIGN_BROWSER_OK` pass |
+| Device status | Initial Preview 7 iPad play found no functional failures; expanded Paper Wings real-finger feel/audio/performance are still untested |
+| Source status | Preview 7 source is committed on `main`; expanded Paper Wings is verified on `codex/paper-wings-sprint1-2026-07-17` and is not merged |
 | Official artifacts | Intentionally unchanged from the older protected generation |
 | Release status | No Preview 7 production promotion was authorized or performed |
-| Next decision | Accept/tune each game from physical iPad evidence, then decide whether to expand or promote |
+| Next decision | Keep Ashfall backlogged; physically feel-test and tune the expanded Paper Wings branch, then review Low Tide for premise and depth |
 
 ## The user's goal and the operating decision
 
@@ -113,7 +224,7 @@ worlds-reboot/
   golf/            Stackyard Golf current source plus protected historical artifacts
   runner/          Gridlock Run current source plus protected historical artifacts/evidence
   ashfall/         Ashfall current source
-  wings/           Paper Wings current source plus a protected reference build
+  wings/           expanded Paper Wings campaign source plus a protected reference build
   tide/            Low Tide current source plus a protected reference build
   tools/           active preview tools and dormant historical release tools
   plans/           historical foundation plan and approval mockups
@@ -396,7 +507,8 @@ controller:
 - Ashfall uses the shared gesture primitive with a genre-specific action and a
   local guarded flow.
 - Tide uses the shared screen primitive with its own action/flow.
-- Wings has its own guarded screen/action flow.
+- Wings has its own guarded campaign/screen/action flow, deterministic mission
+  simulation, and versioned progression store.
 
 This genre-specific composition is deliberate. Preserve the shared safety
 invariants without forcing unrelated game grammars into one abstraction.
@@ -437,7 +549,7 @@ Game options and current defaults:
 | Golf | Front Six / Quick Three / Practice; starting hole 1–6; Standard/Family cup; Standard/Relaxed rivals | Front Six, Hole 1, Standard cup, Standard rivals |
 | Runner | Training 150 m / Final Relay starting at 112 m; Standard/Calm pace; 5/3/1 shields; Standard/Easy swipe | Full Training, Standard pace, 3 shields, Standard swipe |
 | Ashfall | Quick / Full; Calm / Standard / Inferno | Full, Standard |
-| Wings | Quick / Full; Guided / Direct; Solo / Rivals | Full, Guided, Rivals |
+| Wings | Eight missions; Balanced / Racer / Stunt / Guardian loadouts; Guided / Direct; Solo / Rivals; legacy Quick / Full route compatibility | Flight School, Balanced, Full, Guided, Rivals |
 | Tide | Quick / Full; Relaxed / Standard line; Haul / Trophy | Full, Standard, Haul |
 
 Options are encoded through the launcher and consumed by each built game. Test
@@ -582,33 +694,54 @@ visibility, and misleading copy. The scene includes two companions, but it does
 not yet implement a fully modeled named three-rival system; do not claim that it
 does.
 
-Remaining gate: physical touch feel, readability, intensity, audio, and device
-performance.
+Product status: backlogged after the initial iPad play found the loop too basic
+and boring. Do not spend the next session tuning touch, intensity, audio, or
+effects; any return to Ashfall requires a core-gameplay redesign decision.
 
 ### Paper Wings
 
-Paper Wings is a gate-flight race.
+Two Paper Wings generations must be kept distinct.
 
-- Quick has six gates; Full has twelve.
-- Controls are Guided or Direct.
-- Opponents can be Solo or Rivals; rivals are SORA, VALE, and PIP.
-- The control orb has an exact 42 px radius, proportional response inside the
-  radius, and radial saturation at the edge.
-- Guided uses lower authority, faster centering, a 1.26× multiplier on each
-  authored gate's acceptance radius, and mild assistance. Direct uses higher
-  authority and slower centering.
-- Flow is title → briefing → countdown → flight ↔ recovery → finish/fail →
-  results → replay/countdown.
-- Missing a gate triggers a 1.15 second recovery roughly 40 m before the same
-  gate. Three misses on the same gate fail the run.
+**Protected Preview 7 baseline:** its built `wings/index.html` remains the
+six-gate Quick / twelve-gate Full race with Guided or Direct control and Solo or
+SORA/VALE/PIP rivals. Its exact 42 px orb behavior and strengthened contrast are
+still the truthful description of Preview 7. That immutable file was not
+changed during the expansion.
 
-The last Preview 7 change corrected exact 42 px control behavior and strengthened
-hero/gate/orb contrast. Compared with local Preview 6, Wings is the only built
-game file changed in Preview 7; the launcher and other four games remained
-byte-identical.
+**Feature-branch campaign source:**
+`codex/paper-wings-sprint1-2026-07-17` turns the premise into an eight-mission
+aerial-action campaign:
 
-Remaining gate: physical Guided and Direct feel, held-edge behavior, contrast,
-audio, and device performance.
+| Mission | Primary play |
+|---|---|
+| Flight School | gates, thermals, and layered control training |
+| Ridge Race | rivals, route forks, boost, and podium pressure |
+| Target Run | projectile combat and target waves |
+| Stunt Trial | aerobatics, stunt variety, and combo chains |
+| Mountain Rescue | three pickups plus three ordered precision drops |
+| Storm Escape | spatial storm hazards, energy, shield timing, and survival |
+| Ace Pursuit | pursuit, target locks, duel, and return flight |
+| Skybreaker Finale | tower locks, storm assault, and three boss phases |
+
+The left side remains an approachable continuous steering surface. The right
+side adds context-sensitive tap, hold, and directional-flick actions while
+allowing simultaneous steering. The flight model now includes altitude, speed,
+energy, boost, shield, hull integrity, wind/thermals, spatial hazards, route
+forks, real rival state, stunts, combos, projectiles, targets, rescue entities,
+multi-phase objectives, and terminal results.
+
+Campaign state owns mission prerequisites, unlocks, attempts, completions,
+stars, best score/time/combo, completed objectives, and four selectable
+loadouts. Stored progress is versioned, fail-closed, and monotonic. The campaign
+map, briefing, cockpit HUD, phase feedback, results, replay, and next-mission
+flow all derive from authoritative state. Explicit legacy URLs without a
+`wingsMission` parameter still preserve the old six-gate Quick / twelve-gate
+Full behavior; every authored campaign mission uses the complete route.
+
+Remaining gate: play this expanded branch on the physical iPad. Validate
+simultaneous two-finger comfort, Guided and Direct steering, tap/hold/flick
+recognition, energy/shield legibility, mission pacing, audio, heat, and sustained
+frame performance before merging it into a family candidate or tuning values.
 
 ### Low Tide
 
@@ -637,8 +770,9 @@ clarity, audio, and device performance.
 
 The durable verification record is
 [`worlds-reboot/VERIFICATION.md`](worlds-reboot/VERIFICATION.md). Its current
-verdict is PASS for computer/iPad family testing, with physical iPad approval
-pending.
+verdict is PASS for computer/iPad family testing. That record predates the
+initial functional iPad play and is automated evidence, not final product
+approval.
 
 Safe focused units were freshly rerun during preparation of this handoff:
 
@@ -666,6 +800,33 @@ Preview 7's built-browser evidence also records:
 
 This is automated browser evidence. It cannot prove real-finger feel, audio by
 ear, thermal behavior, or sustained iPad frame pacing.
+
+### Expanded Paper Wings branch verification
+
+The 101/101 total above belongs to immutable Preview 7 and must not be rewritten
+as if Preview 7 contains the campaign. The feature branch has its own newer
+focused evidence:
+
+| Suite | Result |
+|---|---:|
+| Expanded Wings source | 121/121 pass |
+| Expanded launcher/preview Wings options | 10/10 pass |
+| Combined Paper Wings branch check | 131/131 pass |
+
+The branch also passed:
+
+- syntax checks for all 42 changed/untracked JavaScript and MJS files;
+- whitespace/error checking with `git diff --check`;
+- deterministic completion and deep-equal replay for all eight mission tapes;
+- rescue eligibility/order, spatial hazard, shield/hull, loadout, legacy Quick,
+  challenge-condition, persistence, and protected-artifact assertions;
+- the live built-browser campaign harness, which printed
+  `WINGS_CAMPAIGN_BROWSER_OK`.
+
+The browser pass used the immutable local artifact and SHA-256 recorded in the
+Paper Wings expansion status section above. It exercised the real built HTML,
+not only source modules. The protected Wings `dist` blob and every tracked file
+under Preview 7 remained exact to `HEAD`.
 
 ## Reproduce the active practical checks
 
@@ -703,6 +864,27 @@ one Puppeteer touchscreen/browser instance after Golf navigation and could emit
 zero Runner pointer events. Each game passes in a fresh browser process. Do not
 spend the next session hardening that aggregate harness unless a new practical
 need justifies it.
+
+For the expanded Paper Wings feature branch, run its focused units from
+`worlds-reboot/`:
+
+```bash
+node --test --test-timeout=30000 wings/src/*.test.js preview/options.test.js
+```
+
+That command must report 121 Wings passes plus 10 preview-option passes, for
+131/131 combined. The campaign browser check requires a separately built,
+disposable single-file Wings artifact served over loopback:
+
+```bash
+WINGS_BASE=http://127.0.0.1:57700/wings/
+node tools/wings.campaign.browser.mjs --base="$WINGS_BASE"
+```
+
+Its success marker is exactly `WINGS_CAMPAIGN_BROWSER_OK`. Never point a build
+at `wings/dist/` or edit Preview 7 to reproduce this test. The previously
+verified `/private/tmp` artifact may disappear after reboot; its recorded hash
+is provenance, not permission to fabricate or modify that path.
 
 If Chrome is not discovered automatically, use the tool's `--chrome` argument
 or set `CHROME_BIN` to the local browser executable.
@@ -856,9 +1038,11 @@ clean.
 
 ## Physical iPad playtest plan
 
-This is the next substantive gate. The goal is not simply “the page loaded.” It
-is to observe whether a child can understand and enjoy each game with real
-touches.
+The first Preview 7 device pass established that all five games function. Keep
+the broader protocol below for later family-candidate approval, but the next
+substantive device gate is specifically the expanded Paper Wings branch. The
+goal is not simply “the page loaded.” It is to observe whether a child can
+understand and enjoy the layered game with real touches.
 
 Run approval in two passes:
 
@@ -871,9 +1055,11 @@ Run approval in two passes:
    non-default choice in every option family. Short modes are useful for rapid
    defect triage, but they do not replace the default/full baseline.
 
-The default baseline is Front Six Golf; Full Training Runner with Standard pace,
-three shields, and Standard swipe; Full/Standard Ashfall; Full/Guided/Rivals
-Wings; and Full/Standard/Haul Tide.
+For immutable Preview 7, the default baseline remains Front Six Golf; Full
+Training Runner with Standard pace, three shields, and Standard swipe;
+Full/Standard Ashfall; Full/Guided/Rivals legacy Wings; and Full/Standard/Haul
+Tide. For the feature branch, Paper Wings starts at Flight School with the
+Balanced loadout, Guided control, and Rivals.
 
 ### Record the environment once
 
@@ -929,11 +1115,41 @@ Wings; and Full/Standard/Haul Tide.
 
 ### Wings
 
-1. Play the default Full/Guided/Rivals baseline and use the entire control orb.
+Preview 7 regression check:
+
+1. Play its default Full/Guided/Rivals race and use the entire 42 px control orb.
 2. Hold the finger at the exact edge and check stable response.
 3. Complete or recover from missed gates.
 4. Play Quick/Direct/Solo and compare authority/centering.
-5. Note hero, gate, rival, and orb contrast.
+
+Expanded branch feel pass:
+
+1. Complete Flight School without adult hand-over. Confirm thermals, gates, and
+   the left-side steering surface teach themselves.
+2. While continuously steering with the left finger, use a right tap, a 220 ms
+   hold, and all four 44 px flick directions. Confirm neither finger steals or
+   cancels the other.
+3. Play Ridge Race with Balanced and Racer loadouts. Compare safe versus
+   shortcut routes, boost decisions, rival readability, and finishing pressure.
+4. Play Target Run and confirm tap-to-fire, projectile feedback, target identity,
+   and accuracy are readable without staring at the HUD.
+5. Play Stunt Trial with the Stunt loadout. Check roll/loop recognition, combo
+   timing, score feedback, and whether repeated tricks remain engaging.
+6. Complete all three Mountain Rescue pickups and their three ordered drops.
+   Confirm locked or early actions are ignored understandably.
+7. Play Storm Escape with Guardian. Compare unshielded damage with a timed
+   shield, and note whether energy, hull, threat, and shield state are legible.
+8. Play Ace Pursuit and Skybreaker Finale. Confirm the ace, target locks, boss
+   phases, hazards, and success/failure causes remain readable during action.
+9. Try Direct control and each of the four loadouts. Record whether added depth
+   feels empowering or merely busy.
+10. Listen to steering, boost, shield, stunt, projectile, damage, objective, and
+    result audio through the iPad speaker; observe heat and frame pacing through
+    at least one uninterrupted ten-minute session.
+
+Do not tune thresholds or mission timers from desktop feel alone. Tie every
+change to the exact branch/artifact, mission, loadout, control profile, and
+physical observation.
 
 ### Tide
 
@@ -975,7 +1191,9 @@ all five games from one ambiguous gesture without first isolating the cause.
 
 ## Known caveats and nonblocking polish
 
-- Physical iPad approval is still absent. This is the only major product gate.
+- Preview 7 had an initial functional iPad play, but final game-by-game product
+  approval remains open. The expanded Paper Wings branch has not yet received
+  any physical iPad feel pass; that is its immediate product gate.
 - Runner intentionally stops at 150 m; 640 m is a post-approval expansion.
 - The aggregate multi-game touchscreen harness can lose pointer events after
   navigation. The accepted path is one fresh process per game.
@@ -1024,9 +1242,11 @@ Ignored/local material on that Mac includes:
 - Wings evidence;
 - local `AGENTS.md` instructions.
 
-Only Preview 7, the durable verification summary, and committed historical
-evidence are portable through Git. The absence of ignored evidence in a new
-clone is expected.
+Preview 7, the durable verification summary, committed historical evidence, and
+the expanded Paper Wings source are portable through Git only after their
+respective commits are pushed. The `/private/tmp` Paper Wings artifact and other
+ignored evidence remain local provenance. Their absence in a new clone is
+expected.
 
 ## Release and authorization boundary
 
@@ -1096,12 +1316,16 @@ The old foundation plan should be interpreted as follows:
 | Phase 2 Golf vertical slice | Implemented; current source now includes all six holes |
 | Phase 3 Runner 0–150 m vertical slice | Implemented |
 | Phase 4 Runner presentation rebuild | Implemented in preview source |
-| Phase 5 physical iPad approval | Still pending for the five-game preview |
-| Phase 6 expansion/promotion | Not done; especially full 640 m Runner and production promotion |
+| Phase 5 physical iPad approval | Initial Preview 7 functional play completed; final game-by-game approval remains open |
+| Phase 6 expansion/promotion | Paper Wings expansion is implemented on an unmerged feature branch; full 640 m Runner and all production promotion remain undone |
 
 The user's later request to apply the same foundation to every game, with
 variety and options, is represented by Preview 7: Ashfall, Wings, and Tide are
 real implemented games with option families, not placeholders.
+
+The later portfolio-depth decision produced the separate eight-mission Paper
+Wings campaign on `codex/paper-wings-sprint1-2026-07-17`. It is an implemented
+and automated/browser-verified expansion, but not a merged or promoted phase.
 
 ## Immediate next actions
 
@@ -1109,38 +1333,57 @@ The next account should proceed in this order:
 
 1. Read this file completely.
 2. Read [`worlds-reboot/VERIFICATION.md`](worlds-reboot/VERIFICATION.md).
-3. Inspect `worlds-reboot/preview-dist/family-preview-20260715-7/preview.json`.
-4. Clone/sync `main`, use Node 22.12+, and run `npm ci` if dependencies are
-   needed.
-5. Run the protected official/reference HTML and Preview 7 hash checks.
-6. Serve Preview 7 from `worlds-reboot/` and confirm local access.
-7. Put the current LAN URL on the physical iPad.
-8. Conduct the all-five-game playtest above and capture concrete evidence.
-9. Classify feedback by game and severity.
-10. Propose the smallest coherent source changes; discuss material visual or
-    control direction changes before implementing them.
-11. Build a new immutable preview ID and rerun practical checks.
-12. Seek explicit approval before any production promotion or major scope
-    expansion.
+3. Inspect `worlds-reboot/preview-dist/family-preview-20260715-7/preview.json`
+   and remember that it does not contain the expanded campaign.
+4. Fetch/sync the repository, inspect `main`, then inspect the unmerged
+   `codex/paper-wings-sprint1-2026-07-17` branch and the active-workstream
+   ledger. Use Node 22.12+ and run `npm ci` if dependencies are needed.
+5. Run the protected official/reference HTML and complete Preview 7 hash checks
+   before any build. They must remain byte-identical.
+6. On the Paper Wings branch, rerun the 121 Wings tests plus 10 preview-option
+   tests. Confirm 131/131 and `git diff --check` before trusting the handoff.
+7. Reproduce `WINGS_CAMPAIGN_BROWSER_OK` against a disposable built artifact if
+   browser evidence needs to be refreshed. Never build into `wings/dist/` and
+   never edit Preview 7.
+8. If the recorded `/private/tmp` artifact still exists, verify its SHA-256
+   before serving it. Otherwise create a new disposable artifact in a new path,
+   give it a new identity/hash, and do not pretend it is the recorded artifact.
+9. Put the exact verified Paper Wings artifact on the physical iPad and conduct
+   the expanded Wings campaign feel pass above.
+10. Classify feedback by mission, loadout, control profile, exact gesture, and
+    severity. Tune only reproducible feel/pacing problems on the feature branch.
+11. After any tuning, create a new immutable artifact and rerun 131/131,
+    `WINGS_CAMPAIGN_BROWSER_OK`, protected-dist checks, and the relevant device
+    path.
+12. Ask for an explicit accept/tune/merge decision. Do not merge the branch,
+    publish a new family preview, or perform production promotion merely because
+    automated checks pass.
 
 ## Definition of the next milestone
 
-The next milestone is complete only when:
+The next milestone is the expanded Paper Wings physical-feel decision. It is
+complete only when:
 
-- all five games have been played on the target iPad with real fingers at their
-  default/full launcher settings for at least five uninterrupted minutes each;
-- targeted alternatives cover at least one non-default choice in every option
-  family;
-- blocking input/flow defects are either absent or reproducibly documented;
+- the exact branch commit and immutable artifact hash used on the iPad are
+  recorded;
+- all eight missions have been exercised with real fingers, including at least
+  one sustained ten-minute session;
+- simultaneous left steering plus right tap/hold/flick actions are comfortable
+  and reliable rather than merely technically recognized;
+- Guided and Direct control plus all four loadouts have meaningful observed
+  feedback;
+- mission objectives, route choices, energy/shield/hull state, rivals, rescue,
+  combat, stunts, boss phases, and results are understandable during action;
+- blocking input/flow defects are absent or reproducibly documented by mission,
+  options, and exact gesture;
 - audio, thermal behavior, and sustained frame pacing have been observed;
-- the child can understand the essential control grammar without continuous
-  adult intervention;
-- feedback is tied to a specific candidate ID and option set;
-- any fixes are delivered in a new immutable candidate with protected artifacts
-  unchanged;
-- the user gives a clear accept/tune decision for each game.
+- any fixes are delivered in a newly hashed disposable artifact with 131/131,
+  `WINGS_CAMPAIGN_BROWSER_OK`, the protected Wings dist, and Preview 7 all clean;
+- the user gives a clear accept/tune decision and separately decides whether the
+  branch should be merged or included in a new family candidate.
 
-That milestone still does not automatically authorize production promotion.
+That milestone does not itself authorize a merge, preview publication, or
+production promotion.
 
 ## Ready-to-paste context for a new account
 
@@ -1153,20 +1396,39 @@ Default branch: main
 Active project: worlds-reboot/
 Existing Mac repo: /Users/shaunbaker/Documents/Playforge
 Existing Mac project: /Users/shaunbaker/Documents/Playforge/worlds-reboot
+Paper Wings feature branch: codex/paper-wings-sprint1-2026-07-17
 
 Start by reading NEW_ACCOUNT_HANDOFF.md completely, then
 worlds-reboot/VERIFICATION.md. Treat NEW_ACCOUNT_HANDOFF.md as operational
 authority; worlds-reboot/HANDOFF.md and plans/* are historical context and
 contain obsolete commands/statuses.
 
-Current candidate:
+Protected baseline candidate:
 worlds-reboot/preview-dist/family-preview-20260715-7/
 
-Current truthful status: Preview 7 is automated/browser-verified for physical
-iPad family testing. It is not yet physically iPad-approved, shipped,
-production-ready, or promoted. All five games are implemented: Stackyard Golf,
-Gridlock Run, Ashfall, Paper Wings, and Low Tide. Runner is intentionally a
-150 m vertical slice until device approval.
+Current truthful status: Preview 7 is immutable and automated/browser-verified.
+An initial iPad play found all five games functionally working, but final
+game-by-game approval and production promotion remain open. Ashfall is rejected
+as too basic and is backlogged.
+
+Paper Wings has been rebuilt on the feature branch as an eight-mission
+aerial-action campaign: Flight School, Ridge Race, Target Run, Stunt Trial,
+Mountain Rescue, Storm Escape, Ace Pursuit, and Skybreaker Finale. It adds
+simultaneous left steering plus right tap/220 ms hold/44 px flick actions,
+aero-energy-shield-hull decisions, routes/hazards, rivals, stunts/combos,
+combat, rescue, multi-phase objectives, four loadouts, a boss finale, and
+versioned campaign progression.
+
+Paper Wings verification is 121/121 Wings units plus 10/10 preview-option units
+= 131/131, and its live built-browser harness printed
+WINGS_CAMPAIGN_BROWSER_OK. The successful immutable local artifact was:
+/private/tmp/playforge-wings-runtime-cadence-final.MmbWkd/wings/index.html
+SHA-256 88ac2272e3fc8e9a94cd7e1a73c8db329f90eab488e7a05035d05df12b5b2edd
+That temp path may not survive; never recreate content under that identity.
+
+The expanded branch is not merged into main, not part of Preview 7, not
+physically feel-approved, and not promoted. worlds-reboot/wings/dist/index.html
+and the complete family-preview-20260715-7 tree must remain untouched.
 
 User's governing decision: isolate real game changes in a separate immutable
 preview, run focused unit/practical browser checks, and test the exact preview
@@ -1178,12 +1440,12 @@ Never edit Preview 7 in place and never run a default per-game Vite build into
 Golf/Runner/Wings/Tide dist/. Use Node 22.12+, npm ci, a new codex/* branch, and
 a new immutable preview ID for changes.
 
-On the existing Mac, first run lsof -nP -iTCP:8091 -sTCP:LISTEN; PID 12837 owned
-that port when this handoff was written, so do not blindly start a second
-server. Then serve/confirm Preview 7 from worlds-reboot/, query the Mac's current
-Wi-Fi IP, conduct the documented all-five-game physical iPad playtest, capture
-exact feedback, and discuss a scoped tuning plan before implementing material
-changes. Do not run npm run test:release or
+Next: fetch and inspect the Paper Wings feature branch, verify protected hashes,
+rerun 131/131 and WINGS_CAMPAIGN_BROWSER_OK if needed, then serve the exact
+verified artifact on the physical iPad for the documented eight-mission feel
+pass. Capture feedback by mission/loadout/control/gesture before tuning. Ask
+separately before merge, new-preview publication, or promotion. Do not run npm
+run test:release or
 npm run test:runner:phase4 without explicit release authorization.
 ```
 

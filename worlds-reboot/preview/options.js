@@ -1,5 +1,18 @@
 const STORAGE_KEY = 'playforge.preview.options.v1';
 
+export const WINGS_MISSION_VALUES = Object.freeze([
+  'flight-school',
+  'ridge-race',
+  'target-run',
+  'stunt-trial',
+  'mountain-rescue',
+  'storm-escape',
+  'ace-pursuit',
+  'skybreaker-finale',
+]);
+
+export const WINGS_LOADOUT_VALUES = Object.freeze(['balanced', 'racer', 'stunt', 'guardian']);
+
 export const PREVIEW_DEFAULTS = Object.freeze({
   sound: 'on',
   quality: 'auto',
@@ -20,6 +33,8 @@ export const PREVIEW_DEFAULTS = Object.freeze({
     intensity: 'standard',
   }),
   wings: Object.freeze({
+    mission: 'flight-school',
+    loadout: 'balanced',
     route: 'full',
     control: 'guided',
     race: 'rivals',
@@ -43,6 +58,8 @@ const VALUES = Object.freeze({
   runnerSwipe: Object.freeze(['standard', 'easy']),
   ashfallMode: Object.freeze(['quick', 'full']),
   ashfallIntensity: Object.freeze(['calm', 'standard', 'inferno']),
+  wingsMission: WINGS_MISSION_VALUES,
+  wingsLoadout: WINGS_LOADOUT_VALUES,
   wingsRoute: Object.freeze(['quick', 'full']),
   wingsControl: Object.freeze(['guided', 'direct']),
   wingsRace: Object.freeze(['solo', 'rivals']),
@@ -95,6 +112,8 @@ export function normalizePreviewOptions(candidate = {}){
       intensity: choose(ashfall.intensity, VALUES.ashfallIntensity, PREVIEW_DEFAULTS.ashfall.intensity),
     },
     wings: {
+      mission: choose(wings.mission, VALUES.wingsMission, PREVIEW_DEFAULTS.wings.mission),
+      loadout: choose(wings.loadout, VALUES.wingsLoadout, PREVIEW_DEFAULTS.wings.loadout),
       route: choose(wings.route, VALUES.wingsRoute, PREVIEW_DEFAULTS.wings.route),
       control: choose(wings.control, VALUES.wingsControl, PREVIEW_DEFAULTS.wings.control),
       race: choose(wings.race, VALUES.wingsRace, PREVIEW_DEFAULTS.wings.race),
@@ -131,6 +150,8 @@ function applyUrlOverrides(state, params){
   if(params.has('runnerSwipe')) next.runner.swipe = params.get('runnerSwipe');
   if(params.has('ashMode')) next.ashfall.mode = params.get('ashMode');
   if(params.has('ashIntensity')) next.ashfall.intensity = params.get('ashIntensity');
+  if(params.has('wingsMission')) next.wings.mission = params.get('wingsMission');
+  if(params.has('wingsLoadout')) next.wings.loadout = params.get('wingsLoadout');
   if(params.has('wingsRoute')) next.wings.route = params.get('wingsRoute');
   if(params.has('wingsControl')) next.wings.control = params.get('wingsControl');
   if(params.has('wingsRace')) next.wings.race = params.get('wingsRace');
@@ -190,6 +211,8 @@ export function previewGameHref(game, options, {
     params.set('ashMode', state.ashfall.mode);
     params.set('ashIntensity', state.ashfall.intensity);
   } else if(game === 'wings') {
+    params.set('wingsMission', state.wings.mission);
+    params.set('wingsLoadout', state.wings.loadout);
     params.set('wingsRoute', state.wings.route);
     params.set('wingsControl', state.wings.control);
     params.set('wingsRace', state.wings.race);

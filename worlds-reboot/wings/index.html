@@ -8,123 +8,141 @@
   <title>Paper Wings | Playforge</title>
   <style>
     :root{
-      --ink:#15292e;
-      --ink-soft:#304a50;
-      --paper:#f5f0e7;
-      --paper-dim:rgba(245,240,231,.7);
-      --line:rgba(245,240,231,.3);
-      --accent:#ff795c;
-      --accent-dark:#9f3328;
-      --sky:#789baa;
-      --panel:rgba(18,38,43,.84);
-      --radius:12px;
-      --safe-top:max(18px,env(safe-area-inset-top));
-      --safe-right:max(20px,env(safe-area-inset-right));
-      --safe-bottom:max(18px,env(safe-area-inset-bottom));
-      --safe-left:max(20px,env(safe-area-inset-left));
-      font-family:"Avenir Next","Helvetica Neue",Arial,sans-serif;
-      color:var(--paper);
-      background:var(--sky);
+      --ink:#15292e;--ink-soft:#304a50;--paper:#f5f0e7;--paper-dim:rgba(245,240,231,.76);
+      --paper-faint:rgba(245,240,231,.52);--line:rgba(245,240,231,.3);--line-strong:rgba(245,240,231,.52);
+      --accent:#ff795c;--accent-dark:#7c2d27;--sky:#789baa;--panel:rgba(18,38,43,.86);--panel-soft:rgba(18,38,43,.62);
+      --radius:12px;--safe-top:max(18px,env(safe-area-inset-top));--safe-right:max(20px,env(safe-area-inset-right));
+      --safe-bottom:max(18px,env(safe-area-inset-bottom));--safe-left:max(20px,env(safe-area-inset-left));
+      font-family:"Avenir Next","Helvetica Neue",Arial,sans-serif;color:var(--paper);background:var(--sky);
     }
     *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
     html,body{width:100%;min-height:100dvh;overflow:hidden;background:var(--sky);touch-action:none;overscroll-behavior:none}
-    button,a{font:inherit}
-    button{cursor:pointer}
+    button,a{font:inherit}button{cursor:pointer}button:disabled{cursor:default}
+    button:focus-visible,a:focus-visible{outline:3px solid var(--paper);outline-offset:3px}
     #gl{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
     #wash,#grain,#edge{position:fixed;inset:0;pointer-events:none}
-    #wash{z-index:4;background:linear-gradient(90deg,rgba(12,32,37,.58) 0%,rgba(12,32,37,.08) 45%,transparent 70%);opacity:0;transition:opacity .5s ease}
-    body[data-mode="title"] #wash,body[data-mode="briefing"] #wash{opacity:1}
-    #edge{z-index:5;background:radial-gradient(120% 105% at 50% 44%,transparent 54%,rgba(16,37,42,.3) 100%)}
-    #grain{z-index:6;opacity:.09;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.42'/%3E%3C/svg%3E");mix-blend-mode:soft-light}
+    #wash{z-index:4;background:linear-gradient(90deg,rgba(12,32,37,.64) 0%,rgba(12,32,37,.12) 50%,transparent 76%);opacity:0;transition:opacity .5s ease}
+    body[data-mode="title"] #wash,body[data-mode="briefing"] #wash,body[data-mode="campaign"] #wash,body[data-mode="results"] #wash{opacity:1}
+    #edge{z-index:5;background:radial-gradient(120% 105% at 50% 44%,transparent 52%,rgba(16,37,42,.34) 100%)}
+    #grain{z-index:6;opacity:.08;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.42'/%3E%3C/svg%3E");mix-blend-mode:soft-light}
+    [hidden]{display:none!important}
     .screen{position:fixed;inset:0;z-index:20;display:flex;align-items:center;padding:var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);transition:opacity .24s ease}
-    .screen[hidden]{display:none}
-    .screen-inner{width:min(560px,48vw);margin-left:5vw}
-    .eyebrow{margin-bottom:17px;color:var(--paper-dim);font-size:11px;font-weight:800;letter-spacing:.26em;text-transform:uppercase}
-    h1{font-size:clamp(58px,8.6vw,112px);line-height:.77;letter-spacing:-.065em;font-weight:850;text-wrap:balance;text-shadow:0 12px 42px rgba(18,38,43,.22)}
+    .screen-inner{width:min(570px,48vw);margin-left:5vw}
+    .eyebrow{margin-bottom:16px;color:var(--paper-dim);font-size:11px;font-weight:850;letter-spacing:.24em;text-transform:uppercase}
+    h1{font-size:clamp(58px,8.5vw,110px);line-height:.78;letter-spacing:-.065em;font-weight:850;text-wrap:balance;text-shadow:0 12px 42px rgba(18,38,43,.22)}
     h1 span{display:block;color:var(--accent)}
-    .lede{max-width:460px;margin-top:25px;font-size:16px;line-height:1.55;font-weight:600;color:var(--paper-dim)}
-    .primary,.secondary{min-height:52px;margin-top:30px;padding:0 25px;border-radius:var(--radius);font-size:12px;font-weight:850;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;transition:transform .14s ease,background .14s ease}
-    .primary{border:1px solid rgba(255,255,255,.18);background:var(--accent);color:#192b2f;box-shadow:0 14px 32px rgba(71,30,24,.22)}
-    .secondary{border:1px solid var(--line);background:rgba(19,41,46,.72);color:var(--paper)}
+    h2{font-size:clamp(34px,5vw,64px);line-height:.94;letter-spacing:-.045em}
+    .lede{max-width:455px;margin-top:24px;font-size:16px;line-height:1.5;font-weight:650;color:var(--paper-dim)}
+    .primary,.secondary{min-height:54px;margin-top:28px;padding:0 25px;border-radius:var(--radius);font-size:12px;font-weight:850;letter-spacing:.13em;text-transform:uppercase;white-space:nowrap;transition:transform .14s ease,background .14s ease}
+    .primary{border:1px solid rgba(245,240,231,.22);background:var(--accent);color:#192b2f;box-shadow:0 14px 32px rgba(71,30,24,.22)}
+    .secondary{border:1px solid var(--line);background:rgba(19,41,46,.76);color:var(--paper)}
     .primary:active,.secondary:active{transform:scale(.98)}
-    .primary:focus-visible,.secondary:focus-visible,#mute:focus-visible{outline:3px solid var(--paper);outline-offset:3px}
-    .route-note{display:flex;gap:24px;margin-top:34px;color:var(--paper-dim);font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
+    .primary:disabled,.secondary:disabled{opacity:.42;box-shadow:none}
+    .route-note{display:flex;gap:24px;margin-top:32px;color:var(--paper-dim);font-size:10px;font-weight:800;letter-spacing:.15em;text-transform:uppercase}
     .route-note b{display:block;margin-bottom:4px;color:var(--paper);font-size:20px;letter-spacing:-.02em}
-
-    #briefing{background:linear-gradient(90deg,rgba(13,34,39,.82),rgba(13,34,39,.16) 62%,transparent)}
-    #briefing h2{max-width:500px;font-size:clamp(36px,5.1vw,66px);line-height:.95;letter-spacing:-.045em}
-    .control-map{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:min(480px,43vw);margin-top:26px}
-    .control-item{min-height:94px;padding:17px;border:1px solid var(--line);border-radius:var(--radius);background:rgba(17,38,43,.54)}
-    .control-item strong{display:block;margin-bottom:8px;color:var(--accent);font-size:20px;letter-spacing:-.02em}
-    .control-item span{color:var(--paper-dim);font-size:12px;line-height:1.45}
-    .assist-line{margin-top:18px;color:var(--paper-dim);font-size:12px;font-weight:650}
-
+    #title{background:linear-gradient(90deg,rgba(13,34,39,.24),transparent 72%)}
+    #campaign{align-items:stretch;background:linear-gradient(90deg,rgba(13,34,39,.94),rgba(13,34,39,.66) 38%,rgba(13,34,39,.12) 76%,transparent)}
+    .campaign-shell{width:100%;display:grid;grid-template-columns:minmax(250px,.72fr) minmax(560px,1.55fr);gap:clamp(24px,4vw,70px);align-items:center;padding:10px 4vw}
+    .campaign-copy{align-self:center}.campaign-copy h2{max-width:390px}.campaign-copy .lede{font-size:14px}
+    .campaign-tally{display:flex;gap:24px;margin-top:22px;color:var(--paper-dim);font-size:10px;font-weight:850;letter-spacing:.15em;text-transform:uppercase}
+    .campaign-tally b{display:block;margin-top:3px;color:var(--paper);font-size:24px;letter-spacing:-.03em}
+    .flight-map{position:relative;min-height:min(68vh,570px);border:1px solid var(--line);border-radius:var(--radius);background:linear-gradient(145deg,rgba(245,240,231,.09),rgba(18,38,43,.38));box-shadow:inset 0 1px 0 rgba(245,240,231,.13),0 22px 60px rgba(12,30,34,.24);overflow:hidden}
+    .flight-map::before{content:"";position:absolute;inset:10% 7%;border:1px solid rgba(245,240,231,.13);border-radius:48% 36% 46% 32%;transform:rotate(-8deg)}
+    .flight-map::after{content:"";position:absolute;left:8%;right:7%;top:53%;height:1px;background:linear-gradient(90deg,transparent,var(--line-strong),transparent);transform:rotate(-9deg)}
+    .mission-node{position:absolute;left:var(--x);top:var(--y);z-index:2;display:grid;grid-template-columns:48px minmax(86px,1fr);align-items:center;gap:9px;min-width:150px;min-height:60px;padding:7px 11px 7px 7px;border:1px solid var(--line);border-radius:var(--radius);background:rgba(18,38,43,.88);color:var(--paper);text-align:left;transform:translate(-50%,-50%);box-shadow:0 10px 24px rgba(14,32,36,.28);transition:transform .18s ease,background .18s ease,border-color .18s ease}
+    .mission-node:active:not(:disabled){transform:translate(-50%,-50%) scale(.97)}
+    .mission-node[data-selected="true"]{border-color:var(--paper);background:rgba(34,62,66,.96)}
+    .mission-node[data-state="complete"] .mission-index{background:var(--paper);color:var(--ink)}
+    .mission-node:disabled{opacity:.46}
+    .mission-index{display:grid;place-items:center;width:46px;height:46px;border:1px solid var(--line-strong);border-radius:var(--radius);color:var(--accent);font-size:13px;font-weight:900}
+    .mission-node-copy strong{display:block;font-size:10px;line-height:1.15;letter-spacing:.09em}.mission-node-copy small{display:block;margin-top:5px;color:var(--paper-faint);font-size:9px;font-weight:800;letter-spacing:.12em}
+    .map-selection{position:absolute;left:18px;right:18px;bottom:16px;z-index:3;display:grid;grid-template-columns:1fr auto;align-items:end;gap:20px;padding:15px 17px;border:1px solid var(--line);border-radius:var(--radius);background:rgba(18,38,43,.92)}
+    .map-selection small{display:block;color:var(--accent);font-size:9px;font-weight:850;letter-spacing:.17em}.map-selection strong{display:block;margin-top:4px;font-size:18px}.map-selection p{max-width:440px;margin-top:4px;color:var(--paper-dim);font-size:11px;line-height:1.35}.map-selection .primary{margin:0}
+    #briefing{background:linear-gradient(90deg,rgba(13,34,39,.88),rgba(13,34,39,.18) 66%,transparent)}
+    #briefing .screen-inner{width:min(670px,58vw)}
+    #briefObjective{max-width:580px;margin-top:16px;color:var(--paper-dim);font-size:14px;line-height:1.5;font-weight:650}
+    .control-map{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:10px;width:min(650px,57vw);margin-top:22px}
+    .control-item{min-height:92px;padding:15px;border:1px solid var(--line);border-radius:var(--radius);background:rgba(17,38,43,.58)}
+    .control-item:first-child{grid-row:span 2;display:flex;flex-direction:column;justify-content:center}
+    .control-item strong{display:block;margin-bottom:7px;color:var(--accent);font-size:18px;letter-spacing:-.02em}.control-item span{color:var(--paper-dim);font-size:11px;line-height:1.4}
+    .assist-line{max-width:610px;margin-top:15px;color:var(--paper-dim);font-size:12px;font-weight:650}
     #countdown{justify-content:center;text-align:center;background:rgba(18,38,43,.12)}
     #countValue{font-size:clamp(110px,22vw,240px);line-height:1;font-weight:850;letter-spacing:-.08em;color:var(--paper);text-shadow:0 14px 60px rgba(17,37,42,.38)}
     #countLabel{margin-top:-12px;color:var(--accent);font-size:12px;font-weight:850;letter-spacing:.24em;text-transform:uppercase}
-
-    #hud{position:fixed;inset:0;z-index:12;pointer-events:none;opacity:0;transition:opacity .3s ease}
+    #hud{position:fixed;inset:0;z-index:12;pointer-events:none;opacity:0;transition:opacity .28s ease}
     body[data-mode="flight"] #hud,body[data-mode="recovery"] #hud,body[data-mode="finish"] #hud,body[data-mode="fail"] #hud{opacity:1}
-    .hud-top{position:absolute;left:var(--safe-left);right:var(--safe-right);top:var(--safe-top);display:grid;grid-template-columns:1fr auto 1fr;align-items:start}
-    .hud-chip{font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;text-shadow:0 2px 16px rgba(11,30,34,.6)}
-    .hud-chip b{display:block;margin-top:5px;color:var(--paper);font-size:20px;letter-spacing:-.02em}
-    .hud-chip.center{text-align:center}.hud-chip.right{text-align:right}
-    #gateName{color:var(--accent)}
-    #flightStatus{position:absolute;left:50%;top:21%;transform:translateX(-50%);padding:10px 15px;border:1px solid var(--line);border-radius:var(--radius);background:rgba(17,38,43,.72);font-size:11px;font-weight:850;letter-spacing:.18em;text-transform:uppercase;opacity:0;transition:opacity .18s ease;white-space:nowrap}
+    .hud-top{position:absolute;left:var(--safe-left);right:var(--safe-right);top:var(--safe-top);display:grid;grid-template-columns:minmax(270px,1.25fr) minmax(160px,.68fr) minmax(190px,.75fr);gap:12px;align-items:start}
+    .hud-panel{border:1px solid rgba(245,240,231,.23);border-radius:var(--radius);background:linear-gradient(145deg,rgba(18,38,43,.78),rgba(18,38,43,.48));box-shadow:inset 0 1px 0 rgba(245,240,231,.09),0 9px 24px rgba(12,30,34,.16);text-shadow:0 2px 16px rgba(11,30,34,.48)}
+    .objective-panel{padding:12px 14px}.hud-label{color:var(--paper-faint);font-size:9px;font-weight:850;letter-spacing:.17em;text-transform:uppercase}
+    #missionName{display:block;margin-top:3px;color:var(--accent);font-size:11px;font-weight:900;letter-spacing:.13em}
+    #objectiveText{display:block;margin-top:7px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px;font-weight:800}
+    #objectiveDetail{display:block;margin-top:3px;color:var(--paper-dim);font-size:10px;font-weight:700}
+    #objectiveProgress,#bossProgress{position:relative;height:5px;margin-top:9px;overflow:hidden;border-radius:3px;background:rgba(245,240,231,.16)}
+    #objectiveProgress::after,#bossProgress::after{content:"";position:absolute;inset:0 auto 0 0;width:var(--progress,0%);background:var(--accent);transition:transform .2s ease;transform-origin:left}
+    .metric-panel{min-height:80px;padding:13px;text-align:center}.metric-panel b{display:block;margin-top:5px;font-size:26px;line-height:1;letter-spacing:-.03em}
+    #bossPanel{margin-top:9px;padding-top:8px;border-top:1px solid var(--line);text-align:left}#bossLabel{font-size:9px;font-weight:850;letter-spacing:.12em}
+    .score-panel{display:grid;grid-template-columns:1fr auto;gap:15px;min-height:80px;padding:13px 14px;text-align:right}.score-panel b{display:block;margin-top:5px;font-size:24px;line-height:1;letter-spacing:-.04em}
+    #comboValue{color:var(--paper)}#comboValue[data-hot]{color:var(--accent);transform:scale(1.08);transform-origin:right}
+    .legacy-flight-readout{position:absolute;left:var(--safe-left);top:calc(var(--safe-top) + 118px);padding:9px 11px;border-left:3px solid var(--accent);background:rgba(18,38,43,.46);font-size:9px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
+    .legacy-flight-readout b{display:inline-block;margin-left:8px;color:var(--paper);font-size:11px}.legacy-flight-readout span+span{margin-left:13px}
+    #flightStatus{position:absolute;left:50%;top:22%;transform:translateX(-50%);padding:10px 15px;border:1px solid var(--line);border-radius:var(--radius);background:rgba(17,38,43,.78);font-size:11px;font-weight:850;letter-spacing:.16em;text-transform:uppercase;opacity:0;transition:opacity .18s ease;white-space:nowrap}
     #flightStatus.show{opacity:1}
+    #threatCue{position:absolute;left:50%;top:31%;transform:translateX(-50%);min-width:260px;padding:11px 18px;border:1px solid var(--accent);border-radius:var(--radius);background:rgba(62,31,31,.88);text-align:center;font-size:11px;font-weight:900;letter-spacing:.16em;color:var(--paper)}
+    #threatCue[data-tone="safe"]{border-color:var(--paper);background:rgba(24,58,54,.88)}
+    #stuntCue{position:absolute;left:20%;top:45%;padding:12px 15px;border-left:3px solid var(--accent);background:rgba(18,38,43,.72)}
+    #stuntCue strong{display:block;font-size:14px;letter-spacing:.08em}#stuntPoints{display:block;margin-top:3px;color:var(--accent);font-size:20px;font-weight:900}
     .hud-bottom{position:absolute;left:var(--safe-left);right:var(--safe-right);bottom:var(--safe-bottom);display:flex;align-items:end;justify-content:space-between}
-    .flight-help{padding:12px 14px;border-left:3px solid var(--accent);background:rgba(18,38,43,.45);font-size:10px;font-weight:800;letter-spacing:.15em;text-transform:uppercase}
-    .flight-help b{display:block;margin-top:5px;font-size:13px;letter-spacing:.08em}
-    .speed{text-align:right;font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
-    .speed b{display:block;font-size:46px;line-height:.9;letter-spacing:-.06em}
+    .energy-cluster{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:end;min-width:235px;padding:12px 14px}
+    .energy-copy b{display:block;margin-top:4px;font-size:14px;letter-spacing:.1em}.energy-value{display:block;margin-top:3px;color:var(--paper);font-size:12px;font-weight:900;letter-spacing:.06em}.energy-segments{display:flex;gap:5px;align-items:end}
+    .energy-segment{position:relative;width:27px;height:35px;overflow:hidden;border:1px solid var(--line);border-radius:5px;background:rgba(245,240,231,.08);transform:skewX(-8deg)}
+    .energy-segment::after{content:"";position:absolute;left:0;right:0;bottom:0;height:var(--segment-fill,100%);background:var(--accent);transition:height .16s ease}
+    .energy-segment[data-state="empty"]::after{background:transparent}.energy-segment[data-state="partial"]::after{opacity:.8}
+    .cockpit-controls{display:flex;align-items:end;gap:12px}.shield-cluster{padding:10px 12px;text-align:right}.shield-value{display:block;margin-top:3px;font-size:11px;font-weight:900;letter-spacing:.08em}.shield-pips{display:flex;gap:7px;margin-top:7px}
+    .shield-pip{width:25px;height:25px;border:2px solid var(--paper);border-radius:6px;transform:rotate(45deg);background:rgba(245,240,231,.12);transition:transform .18s ease,opacity .18s ease}
+    .shield-pip[data-state="spent"]{opacity:.28;transform:rotate(45deg) scale(.72)}
+    #actionButton{position:relative;width:100px;height:100px;border:2px solid rgba(245,240,231,.82);border-radius:50%;background:radial-gradient(circle at 35% 28%,rgba(245,240,231,.2),rgba(18,38,43,.68) 58%),rgba(18,38,43,.82);color:var(--paper);pointer-events:auto;box-shadow:0 10px 30px rgba(12,30,34,.34),inset 0 0 0 4px rgba(245,240,231,.08);transition:transform .12s ease,background .18s ease}
+    #actionButton:active{transform:scale(.96)}#actionButton[data-state="active"]{background:radial-gradient(circle at 35% 28%,rgba(245,240,231,.28),rgba(255,121,92,.38) 62%),rgba(18,38,43,.86)}
+    #actionButton:disabled{opacity:.44}.action-copy{display:grid;place-items:center}.action-copy strong{font-size:13px;letter-spacing:.12em}.action-copy small{margin-top:5px;color:var(--paper-dim);font-size:9px;font-weight:850;letter-spacing:.16em}
     #controlOrb{position:fixed;z-index:14;width:112px;height:112px;margin:-56px 0 0 -56px;border:2px solid rgba(21,41,46,.96);border-radius:50%;background:rgba(21,41,46,.28);box-shadow:0 0 0 1px rgba(245,240,231,.28),0 9px 28px rgba(15,32,36,.32);pointer-events:none;opacity:0;transition:opacity .15s ease}
-    #controlOrb.active{opacity:1}
-    #controlDot{position:absolute;left:50%;top:50%;width:34px;height:34px;margin:-17px;border:3px solid var(--ink);border-radius:50%;background:var(--accent);box-shadow:0 0 0 2px rgba(245,240,231,.9),0 8px 24px rgba(15,32,36,.58);transform:translate3d(0,0,0)}
-
+    #controlOrb.active{opacity:1}#controlDot{position:absolute;left:50%;top:50%;width:34px;height:34px;margin:-17px;border:3px solid var(--ink);border-radius:50%;background:var(--accent);box-shadow:0 0 0 2px rgba(245,240,231,.9),0 8px 24px rgba(15,32,36,.58);transform:translate3d(0,0,0)}
     #terminalFlag{position:fixed;inset:0;z-index:18;display:flex;align-items:center;justify-content:center;pointer-events:none;background:rgba(18,38,43,.12);opacity:0;transition:opacity .18s ease}
-    body[data-mode="finish"] #terminalFlag,body[data-mode="fail"] #terminalFlag{opacity:1}
-    #terminalText{font-size:clamp(54px,10vw,126px);font-weight:850;letter-spacing:-.07em;text-shadow:0 12px 48px rgba(16,36,41,.38)}
-    body[data-mode="fail"] #terminalText{color:var(--accent)}
-
-    #results{justify-content:flex-start;background:linear-gradient(90deg,rgba(14,34,39,.94) 0%,rgba(14,34,39,.77) 43%,rgba(14,34,39,.08) 76%,transparent)}
-    .results-inner{width:min(510px,46vw);margin-left:5vw}
-    #resultKicker{color:var(--accent);font-size:11px;font-weight:850;letter-spacing:.22em;text-transform:uppercase}
-    #resultHeadline{margin-top:12px;font-size:clamp(54px,7.6vw,96px);line-height:.88;letter-spacing:-.06em}
-    #resultSub{max-width:440px;margin-top:18px;color:var(--paper-dim);font-size:14px;line-height:1.5}
-    .result-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:26px}
-    .result-stat{padding-top:12px;border-top:1px solid var(--line);color:var(--paper-dim);font-size:9px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
-    .result-stat b{display:block;margin-top:5px;color:var(--paper);font-size:24px;letter-spacing:-.03em}
-
-    #mute{position:fixed;z-index:32;right:var(--safe-right);bottom:calc(var(--safe-bottom) + 74px);width:48px;height:48px;border:1px solid var(--line);border-radius:var(--radius);background:rgba(18,38,43,.7);color:var(--paper);font-size:10px;font-weight:850;letter-spacing:.08em;text-transform:uppercase}
-    body.preview #mute{display:none}
-
+    body[data-mode="finish"] #terminalFlag,body[data-mode="fail"] #terminalFlag{opacity:1}#terminalText{font-size:clamp(54px,10vw,126px);font-weight:850;letter-spacing:-.07em;text-shadow:0 12px 48px rgba(16,36,41,.38)}body[data-mode="fail"] #terminalText{color:var(--accent)}
+    #results{justify-content:flex-start;background:linear-gradient(90deg,rgba(14,34,39,.96),rgba(14,34,39,.82) 50%,rgba(14,34,39,.12) 82%,transparent)}
+    .results-inner{width:min(850px,76vw);margin-left:5vw}.results-grid{display:grid;grid-template-columns:minmax(280px,.8fr) minmax(330px,1.2fr);gap:38px;align-items:end}
+    #resultKicker{color:var(--accent);font-size:11px;font-weight:850;letter-spacing:.2em;text-transform:uppercase}#resultHeadline{margin-top:10px;font-size:clamp(48px,6vw,82px);line-height:.88;letter-spacing:-.055em}
+    #resultSub{max-width:430px;margin-top:16px;color:var(--paper-dim);font-size:14px;line-height:1.5}.result-rank{display:flex;align-items:end;gap:18px;margin-top:22px}.result-rank>strong{font-size:92px;line-height:.78;letter-spacing:-.08em;color:var(--accent)}
+    .result-rank-copy span{display:block;color:var(--paper-faint);font-size:9px;font-weight:850;letter-spacing:.16em}.result-rank-copy b{display:block;margin-top:5px;font-size:26px}
+    .result-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.result-stat{padding:12px 0;border-top:1px solid var(--line);color:var(--paper-dim);font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}.result-stat b{display:block;margin-top:5px;color:var(--paper);font-size:22px;letter-spacing:-.03em}
+    .result-challenges{margin-top:15px;border:1px solid var(--line);border-radius:var(--radius);background:rgba(18,38,43,.56)}.challenge-row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;min-height:46px;padding:9px 12px}.challenge-row+.challenge-row{border-top:1px solid rgba(245,240,231,.16)}
+    .challenge-row strong{font-size:11px}.challenge-row span:last-child{color:var(--paper-faint);font-size:9px;font-weight:900;letter-spacing:.14em}.challenge-row[data-complete="true"] span:last-child{color:var(--accent)}
+    .result-actions{display:flex;gap:10px;flex-wrap:wrap}.result-actions .primary,.result-actions .secondary{margin-top:18px}
+    #mute{position:fixed;z-index:32;right:var(--safe-right);bottom:calc(var(--safe-bottom) + 118px);width:48px;height:48px;border:1px solid var(--line);border-radius:var(--radius);background:rgba(18,38,43,.72);color:var(--paper);font-size:10px;font-weight:850;letter-spacing:.08em;text-transform:uppercase}body.preview #mute{display:none}
     #portrait{display:none;position:fixed;inset:0;z-index:80;align-items:center;justify-content:center;padding:38px;text-align:center;background:#789baa;color:var(--ink);font-weight:850;font-size:22px;line-height:1.25}
     @media (orientation:portrait) and (max-width:900px){#portrait{display:flex}}
+    @media (max-width:1050px){
+      .campaign-shell{grid-template-columns:240px 1fr;gap:20px;padding:8px 1vw}.mission-node{min-width:132px;grid-template-columns:42px 1fr}.mission-index{width:40px;height:40px}.mission-node-copy strong{font-size:9px}
+      .hud-top{grid-template-columns:minmax(250px,1.2fr) minmax(145px,.65fr) minmax(170px,.7fr)}.hud-panel{box-shadow:none}.results-inner{width:min(820px,82vw);margin-left:2vw}
+    }
     @media (max-width:840px){
-      .screen-inner,.results-inner{width:min(520px,58vw);margin-left:2vw}
-      h1{font-size:clamp(48px,8.6vw,78px)}
-      .control-map{width:min(460px,55vw)}
-      .route-note{gap:15px}
-      .result-stats{gap:10px}
+      .screen-inner{width:min(570px,64vw);margin-left:2vw}h1{font-size:clamp(46px,8.4vw,74px)}#briefing .screen-inner{width:min(620px,72vw)}.control-map{width:min(610px,70vw)}
+      .campaign-copy{display:none}.campaign-shell{display:block;padding:4px}.flight-map{min-height:calc(100dvh - var(--safe-top) - var(--safe-bottom) - 8px)}.map-selection{left:10px;right:10px;bottom:10px}.map-selection p{display:none}
+      .hud-top{grid-template-columns:1.25fr .62fr .65fr;gap:7px}.objective-panel,.metric-panel,.score-panel{padding:9px 10px}.objective-panel{min-width:0}#objectiveText{font-size:12px}.metric-panel b,.score-panel b{font-size:20px}.hud-label{font-size:8px}
+      .legacy-flight-readout{top:calc(var(--safe-top) + 98px)}.energy-cluster{min-width:200px;padding:9px}.energy-segment{width:22px;height:30px}#actionButton{width:88px;height:88px}.shield-cluster{padding:8px}.shield-pip{width:20px;height:20px}
+      .results-inner{width:min(720px,84vw)}.results-grid{grid-template-columns:.8fr 1.2fr;gap:20px}#resultHeadline{font-size:46px}.result-rank>strong{font-size:72px}
     }
-    @media (prefers-reduced-motion:reduce){
-      *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
-      #grain{display:none}
-    }
-    @media (prefers-reduced-transparency:reduce){
-      .control-item,#flightStatus,.flight-help,#mute{background:#17363d}
-    }
+    @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}#grain{display:none}.mission-node,.shield-pip{transition:none}}
+    @media (prefers-reduced-transparency:reduce){.hud-panel,.control-item,#flightStatus,#threatCue,#actionButton,.result-challenges,.map-selection,.mission-node{background:#17363d;backdrop-filter:none}}
   </style>
 </head>
 <body data-mode="title">
-  <canvas id="gl" aria-label="Paper Wings alpine flight course"></canvas>
+  <canvas id="gl" aria-label="Paper Wings alpine action campaign"></canvas>
   <div id="wash"></div><div id="edge"></div><div id="grain"></div>
 
   <section class="screen" id="title" aria-labelledby="gameTitle">
     <div class="screen-inner">
       <p class="eyebrow">Playforge Flight Club</p>
       <h1 id="gameTitle">PAPER <span>WINGS</span></h1>
-      <p class="lede">Thread alpine gates, hold your line, and race three folded rivals.</p>
+      <p class="lede">Race, rescue, fight, and fly through an alpine action campaign.</p>
       <button class="primary" id="beginButton" type="button">Begin briefing</button>
       <div class="route-note" aria-label="Current game options">
         <div><b id="titleGateCount">12</b>gates</div>
@@ -134,55 +152,136 @@
     </div>
   </section>
 
-  <section class="screen" id="briefing" aria-labelledby="briefTitle" hidden inert>
+  <section class="screen" id="campaign" aria-labelledby="campaignHeadline" hidden inert aria-hidden="true">
+    <div class="campaign-shell">
+      <div class="campaign-copy">
+        <p class="eyebrow">Sky League campaign</p>
+        <h2 id="campaignHeadline">Eight ways to master the wind.</h2>
+        <p class="lede">Every mission adds a new flight skill, then asks you to combine it with the ones before.</p>
+        <div class="campaign-tally"><div>League stamps<b id="campaignStars">0</b></div><div>Missions<b>8</b></div></div>
+      </div>
+      <div class="flight-map" aria-label="Paper Wings mission map">
+        <button class="mission-node" type="button" data-mission-id="flight-school" data-state="open" data-selected="true" style="--x:13%;--y:68%">
+          <span class="mission-index">01</span><span class="mission-node-copy"><strong>FLIGHT SCHOOL</strong><small data-mission-stars>0 / 3</small></span>
+        </button>
+        <button class="mission-node" type="button" data-mission-id="ridge-race" data-state="locked" data-selected="false" style="--x:28%;--y:48%" disabled aria-disabled="true">
+          <span class="mission-index">02</span><span class="mission-node-copy"><strong>RIDGE RACE</strong><small data-mission-stars>LOCKED</small></span>
+        </button>
+        <button class="mission-node" type="button" data-mission-id="target-run" data-state="locked" data-selected="false" style="--x:43%;--y:62%" disabled aria-disabled="true">
+          <span class="mission-index">03</span><span class="mission-node-copy"><strong>TARGET RUN</strong><small data-mission-stars>LOCKED</small></span>
+        </button>
+        <button class="mission-node" type="button" data-mission-id="stunt-trial" data-state="locked" data-selected="false" style="--x:51%;--y:31%" disabled aria-disabled="true">
+          <span class="mission-index">04</span><span class="mission-node-copy"><strong>STUNT TRIAL</strong><small data-mission-stars>LOCKED</small></span>
+        </button>
+        <button class="mission-node" type="button" data-mission-id="mountain-rescue" data-state="locked" data-selected="false" style="--x:65%;--y:55%" disabled aria-disabled="true">
+          <span class="mission-index">05</span><span class="mission-node-copy"><strong>MOUNTAIN RESCUE</strong><small data-mission-stars>LOCKED</small></span>
+        </button>
+        <button class="mission-node" type="button" data-mission-id="storm-escape" data-state="locked" data-selected="false" style="--x:70%;--y:24%" disabled aria-disabled="true">
+          <span class="mission-index">06</span><span class="mission-node-copy"><strong>STORM ESCAPE</strong><small data-mission-stars>LOCKED</small></span>
+        </button>
+        <button class="mission-node" type="button" data-mission-id="ace-pursuit" data-state="locked" data-selected="false" style="--x:84%;--y:43%" disabled aria-disabled="true">
+          <span class="mission-index">07</span><span class="mission-node-copy"><strong>ACE PURSUIT</strong><small data-mission-stars>LOCKED</small></span>
+        </button>
+        <button class="mission-node" type="button" data-mission-id="skybreaker-finale" data-state="locked" data-selected="false" style="--x:88%;--y:16%" disabled aria-disabled="true">
+          <span class="mission-index">08</span><span class="mission-node-copy"><strong>SKYBREAKER</strong><small data-mission-stars>LOCKED</small></span>
+        </button>
+        <div class="map-selection" aria-live="polite">
+          <div><small id="selectedMissionKicker">FIRST LIFT</small><strong id="selectedMissionName">FLIGHT SCHOOL</strong><p id="selectedMissionBrief">Clear the ribbon course and wake three training kites.</p></div>
+          <button class="primary" id="selectMissionButton" type="button">Open briefing</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="briefing" aria-labelledby="briefTitle" hidden inert aria-hidden="true">
     <div class="screen-inner">
-      <p class="eyebrow">Flight briefing</p>
-      <h2 id="briefTitle">One finger controls the whole wing.</h2>
-      <div class="control-map">
-        <div class="control-item"><strong>Left / right</strong><span>Drag sideways to bank through the next ring.</span></div>
-        <div class="control-item"><strong>Up / down</strong><span>Drag vertically to climb or descend.</span></div>
+      <p class="eyebrow" id="briefKicker">First lift</p>
+      <h2 id="briefTitle">Learn the mountain wind.</h2>
+      <p id="briefObjective">Clear the ribbon course and wake three training kites.</p>
+      <div class="control-map" aria-label="Flight controls">
+        <div class="control-item"><strong>Left thumb</strong><span>Drag to bank and pitch. Dive for speed, then trade speed to climb.</span></div>
+        <div class="control-item"><strong>Tap</strong><span>Fire or perform the mission action.</span></div>
+        <div class="control-item"><strong>Hold</strong><span>Boost with wind. A threat warning changes hold into shield.</span></div>
+        <div class="control-item"><strong>Flick</strong><span>Roll, loop, or dive-flip to build a chain.</span></div>
       </div>
       <p class="assist-line" id="assistLine">Guided flight gently levels the wing and opens each gate.</p>
-      <button class="primary" id="flightButton" type="button">Start flight</button>
+      <button class="primary" id="flightButton" type="button">Start mission</button>
     </div>
   </section>
 
-  <section class="screen" id="countdown" aria-live="assertive" hidden inert>
+  <section class="screen" id="countdown" aria-live="assertive" hidden inert aria-hidden="true">
     <div><div id="countValue">3</div><div id="countLabel">Hold the line</div></div>
   </section>
-
-  <div id="hud" aria-live="polite">
+  <div id="hud" aria-hidden="true">
     <div class="hud-top">
-      <div class="hud-chip">Paper Wings<b id="routeLabel">Alpine Twelve</b></div>
-      <div class="hud-chip center">Next gate<b id="gateName">The Needles</b></div>
-      <div class="hud-chip right">Position<b id="positionValue">4 / 4</b></div>
+      <section class="hud-panel objective-panel" aria-label="Mission objective">
+        <span class="hud-label">Objective</span><strong id="missionName">FLIGHT SCHOOL</strong>
+        <b id="objectiveText">Clear the ribbon course</b><span id="objectiveDetail">Stay on the wind line</span>
+        <div id="objectiveProgress" role="progressbar" aria-label="Objective progress" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0"></div>
+      </section>
+      <section class="hud-panel metric-panel" aria-label="Mission timing and boss status">
+        <span class="hud-label" id="missionMetricLabel">TIME</span><b id="missionMetricValue">0:00</b>
+        <div id="bossPanel" hidden aria-hidden="true"><span id="bossLabel">SKYBREAKER</span><div id="bossProgress" role="progressbar" aria-label="Boss integrity"></div></div>
+      </section>
+      <section class="hud-panel score-panel" aria-label="Score and combo">
+        <div><span class="hud-label">Score</span><b id="scoreValue">0</b></div>
+        <div><span class="hud-label">Chain</span><b id="comboValue">x1</b></div>
+      </section>
     </div>
-    <div id="flightStatus">Gate clear</div>
+    <div class="legacy-flight-readout" aria-label="Flight readout">
+      <span id="routeLabel">ALPINE TWELVE</span><span>Next <b id="gateName">THE NEEDLES</b></span><span>Position <b id="positionValue">4 / 4</b></span><span>Speed <b id="speedValue">0</b></span>
+    </div>
+    <div id="flightStatus" role="status" aria-live="polite">Gate clear</div>
+    <div id="threatCue" role="alert" data-tone="warning" hidden aria-hidden="true"><span id="threatLabel">LIGHTNING INBOUND</span></div>
+    <div id="stuntCue" role="status" aria-live="polite" hidden aria-hidden="true"><strong id="stuntLabel">BARREL ROLL</strong><span id="stuntPoints">+0</span></div>
     <div class="hud-bottom">
-      <div class="flight-help">One finger<b>Drag to bank and pitch</b></div>
-      <div class="speed">air speed<b id="speedValue">0</b></div>
+      <section class="hud-panel energy-cluster" aria-labelledby="energyLabel">
+        <div class="energy-copy"><span class="hud-label">Wind</span><b id="energyLabel">ENERGY</b><strong class="energy-value" id="energyValue">100%</strong></div>
+        <div class="energy-segments" id="energyProgress" role="progressbar" aria-labelledby="energyLabel" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" aria-valuetext="100 percent wind energy remaining">
+          <span class="energy-segment" data-energy-segment data-state="full" aria-hidden="true"></span><span class="energy-segment" data-energy-segment data-state="full" aria-hidden="true"></span><span class="energy-segment" data-energy-segment data-state="full" aria-hidden="true"></span><span class="energy-segment" data-energy-segment data-state="full" aria-hidden="true"></span><span class="energy-segment" data-energy-segment data-state="full" aria-hidden="true"></span>
+        </div>
+      </section>
+      <div class="cockpit-controls">
+        <section class="hud-panel shield-cluster" aria-labelledby="shieldLabel shieldValue">
+          <span class="hud-label" id="shieldLabel">Shield</span><strong class="shield-value" id="shieldValue">3 / 3</strong><div class="shield-pips" aria-hidden="true"><span class="shield-pip" data-shield-pip data-state="ready"></span><span class="shield-pip" data-shield-pip data-state="ready"></span><span class="shield-pip" data-shield-pip data-state="ready"></span></div>
+        </section>
+        <button id="actionButton" type="button" data-state="ready" aria-label="Boost. Hold"><span class="action-copy"><strong id="actionLabel">BOOST</strong><small id="actionHint">HOLD</small></span></button>
+      </div>
     </div>
   </div>
   <div id="controlOrb"><div id="controlDot"></div></div>
-  <div id="terminalFlag"><div id="terminalText">ROUTE CLEAR</div></div>
-
-  <section class="screen" id="results" aria-labelledby="resultHeadline" hidden inert>
+  <div id="terminalFlag" aria-hidden="true"><div id="terminalText">ROUTE CLEAR</div></div>
+  <section class="screen" id="results" aria-labelledby="resultHeadline" hidden inert aria-hidden="true">
     <div class="results-inner">
-      <div id="resultKicker">Route complete</div>
-      <h2 id="resultHeadline">Clean air.</h2>
-      <p id="resultSub">Every gate is behind you. The ridge is yours.</p>
-      <div class="result-stats">
-        <div class="result-stat">Time<b id="resultTime">0:00.0</b></div>
-        <div class="result-stat">Gates<b id="resultGates">12 / 12</b></div>
-        <div class="result-stat">Misses<b id="resultMisses">0</b></div>
+      <div class="results-grid">
+        <div>
+          <div id="resultKicker">Mission complete</div><h2 id="resultHeadline">Clean air.</h2>
+          <p id="resultSub">The ridge has another story to tell.</p>
+          <div class="result-rank"><strong id="resultRank">A</strong><div class="result-rank-copy"><span>MISSION SCORE</span><b id="resultScore">0</b></div></div>
+        </div>
+        <div>
+          <div class="result-stats">
+            <div class="result-stat">Time<b id="resultTime">0:00.0</b></div>
+            <div class="result-stat">Gates<b id="resultGates">12 / 12</b></div>
+            <div class="result-stat">Misses<b id="resultMisses">0</b></div>
+          </div>
+          <div class="result-challenges" aria-label="Mission challenges">
+            <div class="challenge-row" data-result-challenge data-complete="false"><strong data-challenge-label>Clear every ribbon</strong><span data-challenge-state>OPEN</span></div>
+            <div class="challenge-row" data-result-challenge data-complete="false"><strong data-challenge-label>Wake all training kites</strong><span data-challenge-state>OPEN</span></div>
+            <div class="challenge-row" data-result-challenge data-complete="false"><strong data-challenge-label>Finish with half wind</strong><span data-challenge-state>OPEN</span></div>
+          </div>
+          <div class="result-actions">
+            <button class="primary" id="replayButton" type="button">Fly again</button>
+            <button class="secondary" id="nextMissionButton" type="button" hidden>Next mission</button>
+            <button class="secondary" id="missionSelectButton" type="button">Mission map</button>
+          </div>
+        </div>
       </div>
-      <button class="primary" id="replayButton" type="button">Fly again</button>
     </div>
   </section>
 
   <button id="mute" type="button" aria-label="Toggle sound">Sound</button>
-  <div id="portrait">Turn the iPad sideways to fly.</div>
-
+  <div id="portrait" role="status">Turn the iPad sideways to fly.</div>
   <script type="module" src="/src/main.js"></script>
 </body>
 </html>

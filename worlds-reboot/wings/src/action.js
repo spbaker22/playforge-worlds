@@ -161,3 +161,268 @@ export function createWingActionController({ control = 'guided', dragSpan = CONT
 }
 
 export { CONTROL_PROFILES };
+
+export const WING_TWO_POINTER_TUNING = Object.freeze({
+  steeringFraction: 0.65,
+  holdSeconds: 0.22,
+  flickDistance: 44,
+});
+
+export const WING_ACTION_CONTEXTS = Object.freeze({
+  race: Object.freeze({ id: 'race', tap: 'context', hold: 'boost' }),
+  combat: Object.freeze({ id: 'combat', tap: 'fire', hold: 'boost' }),
+  defense: Object.freeze({ id: 'defense', tap: 'fire', hold: 'shield' }),
+  rescue: Object.freeze({ id: 'rescue', tap: 'context', hold: 'shield' }),
+});
+
+export function normalizeWingActionContext(value = 'combat'){
+  if(typeof value === 'string'){
+    const preset = WING_ACTION_CONTEXTS[value];
+    if(!preset) throw new RangeError(`unknown wing action context ${value}`);
+    return preset;
+  }
+  if(!value || typeof value !== 'object' || Array.isArray(value)) throw new TypeError('wing action context must be a preset or object');
+  if(!['fire', 'context'].includes(value.tap)) throw new RangeError('wing action tap must be fire or context');
+  if(!['boost', 'shield'].includes(value.hold)) throw new RangeError('wing action hold must be boost or shield');
+  return Object.freeze({
+    id: typeof value.id === 'string' && value.id.length > 0 ? value.id : 'custom',
+    tap: value.tap,
+    hold: value.hold,
+  });
+}
+
+function wingFlickCommand(dx, dy){
+  if(Math.abs(dx) >= Math.abs(dy)) return dx < 0 ? 'roll-left' : 'roll-right';
+  return dy < 0 ? 'loop' : 'dive-flip';
+}
+
+function emptyRightAction(reason = 'initial'){
+  return {
+    active: false,
+    pointerId: null,
+    originX: 0,
+    originY: 0,
+    currentX: 0,
+    currentY: 0,
+    peakDx: 0,
+    peakDy: 0,
+    peakDistance: 0,
+    elapsed: 0,
+    mode: 'idle',
+    context: null,
+    gestureSequence: 0,
+    samples: 0,
+    lastEndReason: reason,
+  };
+}
+
+export function createWingTwoPointerController({
+  control = 'guided',
+  dragSpan = CONTROL_ORB_RADIUS,
+  viewportWidth = 1000,
+  actionContext = 'combat',
+} = {}){
+  if(!Number.isFinite(viewportWidth) || viewportWidth <= 0) throw new RangeError('viewportWidth must be positive');
+  const steering = createWingActionController({ control, dragSpan });
+  let width = viewportWidth;
+  let context = normalizeWingActionContext(actionContext);
+  let right = emptyRightAction();
+  let gestureSequence = 0;
+  let commandSequence = 0;
+  let queue = [];
+  let held = { boost: false, shield: false };
+  let lastCancelReason = 'initial';
+
+  function queueCommand(type, gesture = right){
+    queue.push(Object.freeze({
+      id: `wing-command-${commandSequence.toString(36).padStart(5, '0')}`,
+      type,
+      gestureSequence: gesture.gestureSequence,
+      context: gesture.context?.id || context.id,
+    }));
+    commandSequence += 1;
+  }
+
+  function beginRight(pointerId, x, y){
+    if(right.active || steering.snapshot().pointerId === pointerId) return false;
+    gestureSequence += 1;
+    right = {
+      ...emptyRightAction(null),
+      active: true,
+      pointerId,
+      originX: x,
+      originY: y,
+      currentX: x,
+      currentY: y,
+      mode: 'pending',
+      context,
+      gestureSequence,
+      samples: 1,
+    };
+    return true;
+  }
+
+  function begin(pointerId, x, y){
+    if(pointerId === null || pointerId === undefined || !Number.isFinite(x) || !Number.isFinite(y)) return false;
+    if(right.pointerId === pointerId || steering.snapshot().pointerId === pointerId) return false;
+    if(x < width * WING_TWO_POINTER_TUNING.steeringFraction) return steering.begin(pointerId, x, y);
+    return beginRight(pointerId, x, y);
+  }
+
+  function moveRight(x, y){
+    right.currentX = x;
+    right.currentY = y;
+    right.samples += 1;
+    const dx = x - right.originX;
+    const dy = y - right.originY;
+    const distance = Math.hypot(dx, dy);
+    if(distance > right.peakDistance){
+      right.peakDistance = distance;
+      right.peakDx = dx;
+      right.peakDy = dy;
+    }
+    if(right.mode === 'pending' && right.peakDistance >= WING_TWO_POINTER_TUNING.flickDistance) right.mode = 'flick';
+    return true;
+  }
+
+  function move(pointerId, x, y){
+    if(!Number.isFinite(x) || !Number.isFinite(y)) return false;
+    if(pointerId === right.pointerId && right.active) return moveRight(x, y);
+    return steering.move(pointerId, x, y);
+  }
+
+  function finishRight(reason){
+    const gesture = right;
+    if(gesture.mode === 'hold'){
+      held = { ...held, [gesture.context.hold]: false };
+      queueCommand(`${gesture.context.hold}-end`, gesture);
+    } else if(gesture.mode === 'flick' || gesture.peakDistance >= WING_TWO_POINTER_TUNING.flickDistance){
+      queueCommand(wingFlickCommand(gesture.peakDx, gesture.peakDy), gesture);
+    } else {
+      queueCommand(gesture.context.tap, gesture);
+    }
+    right = { ...emptyRightAction(reason), gestureSequence: gesture.gestureSequence };
+    return true;
+  }
+
+  function end(pointerId, reason = 'release'){
+    if(right.active && pointerId === right.pointerId) return finishRight(reason);
+    return steering.end(pointerId, reason);
+  }
+
+  function cancelPointer(pointerId, reason = 'cancel'){
+    if(right.active && pointerId === right.pointerId){
+      const gesture = right;
+      held = { ...held, [gesture.context.hold]: false };
+      queue = queue.filter(command => command.gestureSequence !== gesture.gestureSequence);
+      right = { ...emptyRightAction(reason), gestureSequence: gesture.gestureSequence };
+      lastCancelReason = reason;
+      return true;
+    }
+    if(steering.snapshot().pointerId === pointerId){
+      steering.reset(reason);
+      lastCancelReason = reason;
+      return true;
+    }
+    return false;
+  }
+
+  function cancelAll(reason = 'cancel'){
+    const hadInput = right.active || steering.snapshot().active || queue.length > 0 || held.boost || held.shield;
+    steering.reset(reason);
+    right = { ...emptyRightAction(reason), gestureSequence: right.gestureSequence };
+    held = { boost: false, shield: false };
+    queue = [];
+    lastCancelReason = reason;
+    return hadInput;
+  }
+
+  function reset(reason = 'reset'){
+    cancelAll(reason);
+    return snapshot();
+  }
+
+  function actionTelegraph(){
+    if(!right.active || right.mode === 'flick') return null;
+    return Object.freeze({
+      type: right.context.hold,
+      progress: right.mode === 'hold' ? 1 : Math.min(1, right.elapsed / WING_TWO_POINTER_TUNING.holdSeconds),
+      armed: right.mode === 'hold',
+    });
+  }
+
+  function buildSnapshot(steeringState = steering.snapshot(), commands = Object.freeze([])){
+    return Object.freeze({
+      bank: steeringState.bank,
+      pitch: steeringState.pitch,
+      targetBank: steeringState.targetBank,
+      targetPitch: steeringState.targetPitch,
+      steeringActive: steeringState.active,
+      steeringPointerId: steeringState.pointerId,
+      actionActive: right.active,
+      actionPointerId: right.pointerId,
+      actionMode: right.mode,
+      actionElapsed: right.elapsed,
+      actionSamples: right.samples,
+      held: Object.freeze({ ...held }),
+      telegraph: actionTelegraph(),
+      commands,
+      queuedCommandCount: queue.length,
+      commandSequence,
+      gestureSequence,
+      actionContext: context,
+      steeringFraction: WING_TWO_POINTER_TUNING.steeringFraction,
+      viewportWidth: width,
+      lastCancelReason,
+      control: steeringState.control,
+    });
+  }
+
+  function fixedStep(dt){
+    if(!Number.isFinite(dt) || dt < 0) throw new RangeError('dt must be non-negative');
+    const steeringState = steering.tick(dt);
+    if(right.active){
+      right.elapsed += dt;
+      if(right.mode === 'pending' && right.elapsed >= WING_TWO_POINTER_TUNING.holdSeconds){
+        right.mode = 'hold';
+        held = { ...held, [right.context.hold]: true };
+        queueCommand(`${right.context.hold}-start`);
+      }
+    }
+    const commands = Object.freeze(queue.splice(0, queue.length));
+    return buildSnapshot(steeringState, commands);
+  }
+
+  function snapshot(){
+    return buildSnapshot();
+  }
+
+  function setContext(nextContext){
+    context = normalizeWingActionContext(nextContext);
+    return snapshot();
+  }
+
+  function setViewportWidth(nextWidth){
+    if(!Number.isFinite(nextWidth) || nextWidth <= 0) throw new RangeError('viewportWidth must be positive');
+    width = nextWidth;
+    return snapshot();
+  }
+
+  return Object.freeze({
+    begin,
+    move,
+    end,
+    cancelPointer,
+    cancel: cancelAll,
+    cancelAll,
+    reset,
+    fixedStep,
+    consumeFixedStep: fixedStep,
+    tick: fixedStep,
+    snapshot,
+    setContext,
+    setViewportWidth,
+  });
+}
+
+export const createWingDualActionController = createWingTwoPointerController;

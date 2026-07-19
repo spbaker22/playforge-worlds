@@ -2,7 +2,9 @@
 
 ## ACTIVE
 
-None.
+| Started | Branch | Owner | Scope | Claimed shared files |
+|---|---|---|---|---|
+| 2026-07-17 | `codex/paper-wings-sprint1-2026-07-17` | Codex multi-agent team | Expand Paper Wings into the approved multi-mission aerial-action campaign | `tasks/active-workstreams.md`, `NEW_ACCOUNT_HANDOFF.md`, `worlds-reboot/package.json`, Wings and preview source/tests |
 
 ## HOLD
 

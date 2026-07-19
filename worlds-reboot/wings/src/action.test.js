@@ -1,6 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { CONTROL_ORB_RADIUS, CONTROL_PROFILES, createWingActionController, wingControlTargets } from './action.js';
+import {
+  CONTROL_ORB_RADIUS,
+  CONTROL_PROFILES,
+  WING_TWO_POINTER_TUNING,
+  createWingActionController,
+  createWingTwoPointerController,
+  wingControlTargets,
+} from './action.js';
 
 test('one pointer drag maps right to bank and up to pitch', () => {
   const action = createWingActionController({ control: 'guided', dragSpan: 100 });
@@ -134,4 +141,117 @@ test('reset removes every carried axis and pointer before a replay', () => {
   });
   assert.equal(action.tick(1 / 120).bank, 0);
   assert.equal(action.tick(1 / 120).pitch, 0);
+});
+
+test('left steering stays active while an independent right tap fires', () => {
+  const action = createWingTwoPointerController({ viewportWidth: 1000, control: 'guided', dragSpan: 100, actionContext: 'combat' });
+  assert.equal(action.begin(1, 200, 300), true);
+  assert.equal(action.move(1, 275, 250), true);
+  assert.equal(action.begin(2, 800, 300), true);
+  assert.equal(action.end(2), true);
+  const step = action.fixedStep(1 / 60);
+  assert.equal(step.steeringActive, true);
+  assert.equal(step.steeringPointerId, 1);
+  assert.ok(step.bank > 0);
+  assert.ok(step.pitch > 0);
+  assert.deepEqual(step.commands.map(command => command.type), ['fire']);
+  assert.deepEqual(action.fixedStep(1 / 60).commands, []);
+});
+
+test('hold edges are consumed once while held state persists across steps', () => {
+  const action = createWingTwoPointerController({ viewportWidth: 1000, actionContext: 'combat' });
+  action.begin(7, 800, 240);
+  let step = action.fixedStep(WING_TWO_POINTER_TUNING.holdSeconds - 0.001);
+  assert.deepEqual(step.commands, []);
+  assert.equal(step.held.boost, false);
+  assert.equal(step.telegraph.type, 'boost');
+  assert.ok(step.telegraph.progress > 0.99);
+
+  step = action.fixedStep(0.001);
+  assert.deepEqual(step.commands.map(command => command.type), ['boost-start']);
+  assert.equal(step.held.boost, true);
+  assert.deepEqual(action.fixedStep(1 / 120).commands, []);
+  assert.equal(action.snapshot().held.boost, true);
+
+  action.end(7);
+  step = action.fixedStep(1 / 120);
+  assert.deepEqual(step.commands.map(command => command.type), ['boost-end']);
+  assert.equal(step.held.boost, false);
+  assert.deepEqual(action.fixedStep(1 / 120).commands, []);
+});
+
+test('explicit defensive context telegraphs and holds shield instead of boost', () => {
+  const action = createWingTwoPointerController({ viewportWidth: 1000, actionContext: 'defense' });
+  action.begin(8, 900, 220);
+  let step = action.fixedStep(0.1);
+  assert.deepEqual(step.telegraph, { type: 'shield', progress: 0.1 / WING_TWO_POINTER_TUNING.holdSeconds, armed: false });
+  step = action.fixedStep(0.12);
+  assert.equal(step.telegraph.armed, true);
+  assert.equal(step.held.shield, true);
+  assert.equal(step.held.boost, false);
+  assert.deepEqual(step.commands.map(command => command.type), ['shield-start']);
+});
+
+test('44px right-side flicks map four dominant directions to aerobatics', () => {
+  const cases = [
+    { dx: -44, dy: 0, command: 'roll-left' },
+    { dx: 44, dy: 0, command: 'roll-right' },
+    { dx: 0, dy: -44, command: 'loop' },
+    { dx: 0, dy: 44, command: 'dive-flip' },
+  ];
+  const action = createWingTwoPointerController({ viewportWidth: 1000 });
+  for(const [index, sample] of cases.entries()){
+    const pointerId = 20 + index;
+    action.begin(pointerId, 800, 300);
+    action.move(pointerId, 800 + sample.dx, 300 + sample.dy);
+    action.end(pointerId);
+    const step = action.fixedStep(0);
+    assert.deepEqual(step.commands.map(command => command.type), [sample.command]);
+    assert.deepEqual(action.fixedStep(0).commands, []);
+  }
+});
+
+test('action context is captured at pointer-down and can produce context taps', () => {
+  const action = createWingTwoPointerController({ viewportWidth: 1000, actionContext: 'race' });
+  action.begin(31, 800, 300);
+  action.setContext('combat');
+  action.end(31);
+  const first = action.fixedStep(0);
+  assert.equal(first.commands[0].type, 'context');
+  assert.equal(first.commands[0].context, 'race');
+  action.begin(32, 800, 300);
+  action.end(32);
+  assert.equal(action.fixedStep(0).commands[0].type, 'fire');
+});
+
+test('menu cancellation clears both pointers, queued edges, and stale releases', () => {
+  const action = createWingTwoPointerController({ viewportWidth: 1000, actionContext: 'defense', dragSpan: 100 });
+  action.begin(41, 100, 200);
+  action.move(41, 190, 130);
+  action.begin(42, 800, 200);
+  const armed = action.fixedStep(WING_TWO_POINTER_TUNING.holdSeconds);
+  assert.equal(armed.held.shield, true);
+  assert.deepEqual(armed.commands.map(command => command.type), ['shield-start']);
+
+  assert.equal(action.cancelAll('preview-menu-open'), true);
+  assert.equal(action.end(41), false);
+  assert.equal(action.end(42), false);
+  const resumed = action.fixedStep(1 / 120);
+  assert.equal(resumed.bank, 0);
+  assert.equal(resumed.pitch, 0);
+  assert.equal(resumed.steeringActive, false);
+  assert.equal(resumed.actionActive, false);
+  assert.deepEqual(resumed.held, { boost: false, shield: false });
+  assert.deepEqual(resumed.commands, []);
+  assert.equal(resumed.lastCancelReason, 'preview-menu-open');
+});
+
+test('reset discards an unconsumed tap edge before replay', () => {
+  const action = createWingTwoPointerController({ viewportWidth: 1000 });
+  action.begin(51, 900, 100);
+  action.end(51);
+  assert.equal(action.snapshot().queuedCommandCount, 1);
+  const reset = action.reset('replay');
+  assert.equal(reset.queuedCommandCount, 0);
+  assert.deepEqual(action.fixedStep(0).commands, []);
 });
